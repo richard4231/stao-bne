@@ -361,7 +361,7 @@
             "LP: Wissen",
             "LP: Bewusstsein",
             "LP: Handeln",
-            "U: Prinzipien",
+            "Unterricht: Prinzipien",
             "U: Kompetenzen",
             "U: Themen",
             "U: Methoden",
@@ -609,11 +609,11 @@
                 ]
             },
 
-            // U: Prinzipien id 4x
+            // Unterricht: Prinzipien id 4x
             {
                 id: 41,
                 text: "Ich besitze bereits ein breites Repertoire an Prinzipien, die ich im BNE-Unterricht umsetzen kann.",
-                bereich: "U: Prinzipien",
+                bereich: "Unterricht: Prinzipien",
                 ebene: "subjektiv",
                 typ: "slider",
                 antworten: [
@@ -626,7 +626,7 @@
             {
                 id: 42,
                 text: "Aktualitätsbezug ist als eines von drei didaktischen BNE-Prinzipen im Lehrplan 21 verankert. Ist die Aussage korrekt?",
-                bereich: "U: Prinzipien",
+                bereich: "Unterricht: Prinzipien",
                 ebene: "objektiv",
                 typ: "mc",
                 antworten: [
@@ -637,7 +637,7 @@
             {
                 id: 43,
                 text: "«Im Unterricht werden eigene und kollektive Denkweisen und Werte aufgespürt und miteinander verglichen.» Um welches Prinzip handelt es sich?",
-                bereich: "U: Prinzipien",
+                bereich: "Unterricht: Prinzipien",
                 ebene: "objektiv",
                 typ: "mc",
                 antworten: [
@@ -649,7 +649,7 @@
             {
                 id: 44,
                 text: "«Nachhaltige Entwicklung ist ein optimistischer Ansatz, der sich an einer positiven Zukunft orientiert.» Um welches Prinzip handelt es sich?",
-                bereich: "U: Prinzipien",
+                bereich: "Unterricht: Prinzipien",
                 ebene: "objektiv",
                 typ: "mc",
                 antworten: [
@@ -661,7 +661,7 @@
             {
                 id: 45,
                 text: "Um die BNE-Prinzipien noch besser verstehen zu können, möchte ich mich noch vertiefter mit diesen befassen.",
-                bereich: "U: Prinzipien",
+                bereich: "Unterricht: Prinzipien",
                 ebene: "interesse",
                 typ: "slider",
                 antworten: [
@@ -1294,7 +1294,14 @@ function renderResultsSummary() {
                     y -= 5; // oben
                 }
                 
-                ctx.fillText(bereich, x, y);
+                // Text in zwei Zeilen aufteilen
+                const lines = splitBereichLabel(bereich);
+                
+                // Erste Zeile (kleiner Abstand nach oben)
+                ctx.fillText(lines[0], x, y - 15);
+                
+                // Zweite Zeile (kleiner Abstand nach unten)
+                ctx.fillText(lines[1], x, y + 15);
             });
             
             // Zurücksetzen des textAlign
@@ -1373,6 +1380,24 @@ function renderResultsSummary() {
         function durchschnitt(werte) {
             if (werte.length === 0) return MIN_WERT;
             return werte.reduce((a, b) => a + b, 0) / werte.length;
+        }
+        
+        // Hilfsfunktion: Bereichsnamen in zwei Zeilen aufteilen
+        function splitBereichLabel(text) {
+            // Aufteilen bei ": " (z.B. "LP: Wissen" wird zu ["LP:", "Wissen"])
+            const match = text.match(/^([^:]+):\s*(.+)$/);
+            if (match) {
+                return [match[1] + ":", match[2]];
+            }
+            
+            // Fallback: Teile nach dem ersten Wort
+            const words = text.split(" ");
+            if (words.length > 1) {
+                return [words[0], words.slice(1).join(" ")];
+            }
+            
+            // Wenn keine Aufteilung möglich ist
+            return [text, ""];
         }
 
         // Seiten-Navigation
