@@ -1092,8 +1092,7 @@
             container.innerHTML = html;
         }
 
-        // Ergebniszusammenfassung anzeigen
-
+// Ergebniszusammenfassung anzeigen
 function renderResultsSummary() {
     const resultContainer = document.getElementById('resultsSummary');
     
@@ -1175,7 +1174,7 @@ function renderResultsSummary() {
             const height = canvas.height;
             const centerX = width / 2;
             const centerY = height / 2;
-            const radius = Math.min(width, height) * 0.35; // 35% des Canvas-Radius verwenden
+            const radius = Math.min(width, height) * 0.35; // xx% des Canvas-Radius verwenden
             
             // Canvas löschen
             ctx.clearRect(0, 0, width, height);
@@ -1215,13 +1214,13 @@ function renderResultsSummary() {
             }
 
             // Konzentrische Kreise für die drei Radien
-            for (let r = 1; r <= 4; r++) {
+            for (let r = 1; r <= 3; r++) {
                 ctx.beginPath();
                 ctx.strokeStyle = '#d1d5db';
                 ctx.lineWidth = 1;
                 
                 // Berechne den aktuellen Radius (von innen nach außen)
-                const currentRadius = radius * (r / 4);
+                const currentRadius = radius * (r / 3);
                 
                 // Zeichne einen Kreis mit dem aktuellen Radius
                 ctx.arc(centerX, centerY, currentRadius, 0, 2 * Math.PI);
@@ -1317,7 +1316,7 @@ function renderResultsSummary() {
             ebenen.forEach((ebene) => {
                 const punkte = chartData.map((data, i) => {
                     // Umrechnung der Werte (1-3) auf einen Skalenfaktor (0-1)
-                    const normalisierterWert = (data[ebene.name]-1) / 2; //hier einstellen, damit nicht alles bei 0 ist.
+                    const normalisierterWert = (data[ebene.name]) / 3; //hier einstellen, damit nicht alles bei 0 ist. (alt: (data[ebene.name] - 1) / 3)
                     const angle = i * winkel - Math.PI / 2;
                     return {
                         x: centerX + ((radius * normalisierterWert)) * Math.cos(angle),
