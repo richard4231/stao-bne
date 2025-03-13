@@ -156,7 +156,8 @@
         }
         .navigation {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
+            gap: 20px;
             margin-top: 20px;
             padding-top: 20px;
             border-top: 1px solid #e5e7eb;
@@ -335,6 +336,23 @@
     </div>
 
     <script>
+        // =========================================================
+        // FRAGENKATALOG - BEGINN
+        // =========================================================
+        // Anleitung zum Hinzufügen oder Bearbeiten von Fragen:
+        // 1. Jede Frage hat eine eindeutige ID
+        // 2. Die ID folgt dem Schema: <Bereichsnummer><laufende Nummer>
+        //    z.B. 11, 12, 13 für Fragen im ersten Bereich
+        // 3. Struktur jeder Frage:
+        //    - id: Eindeutige Nummer der Frage
+        //    - text: Der Fragetext
+        //    - bereich: Einer der Bereiche aus der BEREICHE-Konstante
+        //    - ebene: "subjektiv", "objektiv" oder "interesse"
+        //    - typ: "slider" oder "mc" (Multiple Choice)
+        //    - antworten: Array mit Antwortmöglichkeiten
+        //      * text: Beschreibung der Antwort
+        //      * wert: Punktwert (1-3)
+        
         // Konfiguration
         const MIN_WERT = 1;
         const MAX_WERT = 3;
@@ -887,6 +905,9 @@
                 ]
             }
         ];
+        // =========================================================
+        // FRAGENKATALOG - ENDE
+        // =========================================================
 
         // Globaler State für Antworten und aktuelle Seite
         let antworten = {};
@@ -1194,25 +1215,26 @@ function renderResultsSummary() {
             }
 
             // Konzentrische Kreise für die drei Radien
-            for (let r = 1; r <= 3; r++) {
+            for (let r = 1; r <= 4; r++) {
                 ctx.beginPath();
                 ctx.strokeStyle = '#d1d5db';
                 ctx.lineWidth = 1;
                 
                 // Berechne den aktuellen Radius (von innen nach außen)
-                const currentRadius = radius * (r / 3);
+                const currentRadius = radius * (r / 4);
                 
                 // Zeichne einen Kreis mit dem aktuellen Radius
                 ctx.arc(centerX, centerY, currentRadius, 0, 2 * Math.PI);
                 ctx.stroke();
                 
-                // Füge Beschriftung für den Radius hinzu (1, 2, 3) mit 4 ausgeschaltet, sonst 0.
-                if (r > 4) {
+                /* Füge Beschriftung für den Radius hinzu (1, 2, 3)
+                if (r > 0) {
                     ctx.fillStyle = '#9ca3af';
                     ctx.font = '16px Arial';
                     ctx.textAlign = 'center';
                     ctx.fillText(r.toString(), centerX + 5, centerY - currentRadius + 16);
                 }
+                */
             }
 
             // Achsenlinien vom Zentrum zu den äußeren Punkten
@@ -1295,11 +1317,11 @@ function renderResultsSummary() {
             ebenen.forEach((ebene) => {
                 const punkte = chartData.map((data, i) => {
                     // Umrechnung der Werte (1-3) auf einen Skalenfaktor (0-1)
-                    const normalisierterWert = (data[ebene.name] - 1) / 2;
+                    const normalisierterWert = (data[ebene.name]-1) / 2; //hier einstellen, damit nicht alles bei 0 ist.
                     const angle = i * winkel - Math.PI / 2;
                     return {
-                        x: centerX + (radius * normalisierterWert) * Math.cos(angle),
-                        y: centerY + (radius * normalisierterWert) * Math.sin(angle)
+                        x: centerX + ((radius * normalisierterWert)) * Math.cos(angle),
+                        y: centerY + ((radius * normalisierterWert)) * Math.sin(angle)
                     };
                 });
 
