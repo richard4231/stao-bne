@@ -354,7 +354,7 @@
         //      * wert: Punktwert (1-3)
         
         // Konfiguration
-        const MIN_WERT = 1;
+        const MIN_WERT = 0;
         const MAX_WERT = 3;
         
         const BEREICHE = [
@@ -377,6 +377,7 @@
                 ebene: "subjektiv",
                 typ: "slider",
                 antworten: [
+                    { text: "Keine Angabe", wert: 0 },
                     { text: "Wenig oder grundlegend", wert: 1 },
                     { text: "Fortgeschritten", wert: 2 },
                     { text: "Hohe Expertise", wert: 3 }
@@ -1139,9 +1140,9 @@ function renderResultsSummary() {
     resultContainer.innerHTML = bereichErgebnisse.length > 0 ? html : '<p>Keine Daten vorhanden.</p>';
 }
 
-        // Verbesserte Canvas-Initialisierung für den Radar-Chart
+        //Canvas-Initialisierung für den Radar-Chart
         function setupCanvas(canvas) {
-            // Setze Canvas auf eine vernünftige Größe mit guter Auflösung
+            // Setze Canvas auf Größe mit guter Auflösung
             canvas.width = 1600;
             canvas.height = 1600;
             
@@ -1164,7 +1165,7 @@ function renderResultsSummary() {
             antworten[fragenId] = wert;
         }
 
-        // Radar-Chart zeichnen mit verbesserter Initialisierung
+        // Radar-Chart zeichnen 
         function drawRadar() {
             const canvas = document.getElementById('radarCanvas');
             const ctx = setupCanvas(canvas);
@@ -1316,7 +1317,7 @@ function renderResultsSummary() {
             ebenen.forEach((ebene) => {
                 const punkte = chartData.map((data, i) => {
                     // Umrechnung der Werte (1-3) auf einen Skalenfaktor (0-1)
-                    const normalisierterWert = (data[ebene.name]) / 3; //hier einstellen, damit nicht alles bei 0 ist. (alt: (data[ebene.name] - 1) / 3)
+                    const normalisierterWert = (data[ebene.name]-1) / 3; //hier einstellen, damit nicht alles bei 0 ist. (alt: (data[ebene.name] - 1) / 3)
                     const angle = i * winkel - Math.PI / 2;
                     return {
                         x: centerX + ((radius * normalisierterWert)) * Math.cos(angle),
