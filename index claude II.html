@@ -247,7 +247,7 @@
         <div class="page" id="page-0">
             <div class="intro-text">
                 <p>Willkommen zur Standortbestimmung im Bereich Bildung für nachhaltige Entwicklung (BNE). 
-                   Bitte füllen Sie zunächst Ihre persönlichen Daten aus und beantworten Sie dann die Fragen auf den folgenden Seiten.</p>
+                   Bitte füllen Sie zunächst Ihre persönlichen Daten aus und beantworten Sie dann die Fragen auf den folgenden Seiten. V1.01/ARI</p>
             </div>
             <div class="form-group">
                 <label for="vorname">Vorname</label>
@@ -1142,11 +1142,11 @@ function renderResultsSummary() {
 
         //Canvas-Initialisierung für den Radar-Chart
         function setupCanvas(canvas) {
-            // Setze Canvas auf Größe mit guter Auflösung
+            // Setze Canvas auf Grösse mit guter Auflösung
             canvas.width = 1600;
             canvas.height = 1600;
             
-            // Setze Display-Größe via CSS
+            // Setze Display-Grösse via CSS
             canvas.style.width = '100%';
             canvas.style.height = 'auto';
             canvas.style.maxWidth = '1000px';
@@ -1220,7 +1220,7 @@ function renderResultsSummary() {
                 ctx.strokeStyle = '#d1d5db';
                 ctx.lineWidth = 1;
                 
-                // Berechne den aktuellen Radius (von innen nach außen)
+                // Berechne den aktuellen Radius (von innen nach aussen)
                 const currentRadius = radius * (r / 3);
                 
                 // Zeichne einen Kreis mit dem aktuellen Radius
@@ -1237,7 +1237,7 @@ function renderResultsSummary() {
                 */
             }
 
-            // Achsenlinien vom Zentrum zu den äußeren Punkten
+            // Achsenlinien vom Zentrum zu den äusseren Punkten
             ctx.beginPath();
             ctx.strokeStyle = '#d1d5db';
             ctx.lineWidth = 1;
