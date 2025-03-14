@@ -1280,9 +1280,11 @@ function renderResultsSummary() {
                 const lines = splitBereichLabel(bereich);
                 
                 // Erste Zeile (kleiner Abstand nach oben)
+                ctx.font = 'bold 30px Arial';
                 ctx.fillText(lines[0], x, y - 15);
                 
                 // Zweite Zeile (kleiner Abstand nach unten)
+                ctx.font = '30px Arial';
                 ctx.fillText(lines[1], x, y + 15);
             });
             
