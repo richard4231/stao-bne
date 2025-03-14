@@ -16,35 +16,35 @@
             margin: 0 auto;
             background: white;
             padding: 20px;
-            border-radius: 8px;
+            border-radiuSchule: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         .grid {
             display: grid;
-            grid-template-columns: 1fr;
+            grid-template-columnSchule: 1fr;
             gap: 20px;
         }
         @media (min-width: 1500px) { /* Bei grossen Bildschirmen mehr Platz für Radar Chart */
             .results-grid {
-                grid-template-columns: 1fr 2fr; 
+                grid-template-columnSchule: 1fr 2fr; 
             }
         }
         .results-columns {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columnSchule: 1fr 1fr;
             gap: 15px;
          }
 
         @media (max-width: 600px) {
             .results-columns {
-                grid-template-columns: 1fr;
+                grid-template-columnSchule: 1fr;
     }
 }
         .question-card {
             border: 1px solid #e5e7eb;
             padding: 15px;
             margin-bottom: 15px;
-            border-radius: 6px;
+            border-radiuSchule: 6px;
         }
         .question-title {
             font-weight: bold;
@@ -62,10 +62,10 @@
         }
         .mc-option {
             display: flex;
-            align-items: center;
+            align-itemSchule: center;
             gap: 8px;
             padding: 8px;
-            border-radius: 4px;
+            border-radiuSchule: 4px;
             cursor: pointer;
         }
         .mc-option:hover {
@@ -81,21 +81,21 @@
             background: #ddd;
             outline: none;
             -webkit-appearance: none;
-            border-radius: 5px;
+            border-radiuSchule: 5px;
         }
         .slider::-webkit-slider-thumb {
             -webkit-appearance: none;
             width: 20px;
             height: 20px;
             background: #2563eb;
-            border-radius: 50%;
+            border-radiuSchule: 50%;
             cursor: pointer;
         }
         .slider::-moz-range-thumb {
             width: 20px;
             height: 20px;
             background: #2563eb;
-            border-radius: 50%;
+            border-radiuSchule: 50%;
             cursor: pointer;
             border: none;
         }
@@ -115,7 +115,7 @@
         .radar-container {
             display: flex;
             flex-direction: column;
-            align-items: center;
+            align-itemSchule: center;
             justify-content: center;
             width: 100%;
             height: 100%;
@@ -138,7 +138,7 @@
         }
         .legend-item {
             display: flex;
-            align-items: center;
+            align-itemSchule: center;
             gap: 8px;
             font-size: 14px;
             font-weight: bold;
@@ -146,7 +146,7 @@
         .legend-color {
             width: 20px;
             height: 10px;
-            border-radius: 2px;
+            border-radiuSchule: 2px;
         }
         .page {
             display: none;
@@ -167,7 +167,7 @@
             background-color: #2563eb;
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radiuSchule: 4px;
             cursor: pointer;
             font-weight: bold;
         }
@@ -184,7 +184,7 @@
             height: 10px;
             width: 10px;
             background-color: #cbd5e0;
-            border-radius: 50%;
+            border-radiuSchule: 50%;
             margin: 0 5px;
         }
         .progress-dot.active {
@@ -202,7 +202,7 @@
             width: 100%;
             padding: 8px;
             border: 1px solid #e2e8f0;
-            border-radius: 4px;
+            border-radiuSchule: 4px;
             box-sizing: border-box;
         }
         .intro-text {
@@ -212,7 +212,7 @@
             margin-bottom: 30px;
             padding: 15px;
             background-color: #f8fafc;
-            border-radius: 6px;
+            border-radiuSchule: 6px;
         }
         .summary-section h3 {
             margin-top: 0;
@@ -222,7 +222,7 @@
             margin-bottom: 30px;
             padding: 15px;
             background-color: #f0f9ff;
-            border-radius: 6px;
+            border-radiuSchule: 6px;
         }
         .personal-data-section h3 {
             margin-top: 0;
@@ -358,22 +358,22 @@
         const MAX_WERT = 3;
         
         const BEREICHE = [
-            "LP: Wissen",
-            "LP: Bewusstsein",
-            "LP: Handeln",
+            "Lehrperson: Wissen", 
+            "Lehrperson: Bewusstsein",
+            "Lehrperson: Handeln",
             "Unterricht: Prinzipien",
-            "U: Kompetenzen",
-            "U: Themen",
-            "U: Methoden",
-            "S: Schulentwicklung",
+            "Unterricht: Kompetenzen",
+            "Unterricht: Themen",
+            "Unterricht: Methoden",
+            "Schule: Schulentwicklung",
         ];
 
         const FRAGEN = [
-            // LP: Wissen Nummerierung: 1x
+            // Lehrperson: Wissen Nummerierung: 1x
             {
                 id: 11,
                 text: "Wie gut kennen Sie sich mit den SDG aus?",
-                bereich: "LP: Wissen",
+                bereich: "Lehrperson: Wissen",
                 ebene: "subjektiv",
                 typ: "slider",
                 antworten: [
@@ -385,7 +385,7 @@
             {
                 id: 12,
                 text: "Zu welcher Umsetzungsstrategie von Nachhaltigkeit passt die folgende Definition: «Weniger produzieren und konsumieren: Energie- und Materialverbrauch begrenzen. Beispiel: Vom Besitzen zum Teilen»",
-                bereich: "LP: Wissen",
+                bereich: "Lehrperson: Wissen",
                 ebene: "objektiv",
                 typ: "mc",
                 antworten: [
@@ -397,7 +397,7 @@
             {
                 id: 13,
                 text: "Wie stark interessieren Sie sich für die SDG?",
-                bereich: "LP: Wissen",
+                bereich: "Lehrperson: Wissen",
                 ebene: "interesse",
                 typ: "slider",
                 antworten: [
@@ -409,7 +409,7 @@
             {
                 id: 14,
                 text: "Um mein Unterricht zielorientierter gestalten zu können, möchte ich noch mehr über die Leitidee von Nachhaltiger Entwicklung und die Ziele einer BNE erfahren.",
-                bereich: "LP: Wissen",
+                bereich: "Lehrperson: Wissen",
                 ebene: "interesse",
                 typ: "slider",
                 antworten: [
@@ -421,7 +421,7 @@
             {
                 id: 15,
                 text: "Wie schätzen Sie Ihre Kompetenzen im Bereich der BNE im Unterricht ein?",
-                bereich: "LP: Wissen",
+                bereich: "Lehrperson: Wissen",
                 ebene: "subjektiv",
                 typ: "slider",
                 antworten: [
@@ -433,7 +433,7 @@
             {
                 id: 16,
                 text: "Der Lehrplan 21 bezieht sich auf das «Drei-Dimensionen-Modell der Nachhaltigen Entwicklung». Welche ist keine der drei Dimensionen?",
-                bereich: "LP: Wissen",
+                bereich: "Lehrperson: Wissen",
                 ebene: "objektiv",
                 typ: "mc",
                 antworten: [
@@ -446,7 +446,7 @@
             {
                 id: 17,
                 text: "Zu welcher Umsetzungsstrategie von Nachhaltigkeit passt folgendes Beispiel: «Eine Glühbirne wird mit LED ersetzt.»",
-                bereich: "LP: Wissen",
+                bereich: "Lehrperson: Wissen",
                 ebene: "objektiv",
                 typ: "mc",
                 antworten: [
@@ -458,7 +458,7 @@
             {
                 id: 18,
                 text: "Ist die Förderung einer Nachhaltigen Entwicklung in der Schweizerischen Bundesverfassung als Auftrag staatlichen Handelns festgeschrieben?",
-                bereich: "LP: Wissen",
+                bereich: "Lehrperson: Wissen",
                 ebene: "objektiv",
                 typ: "mc",
                 antworten: [
@@ -466,11 +466,11 @@
                     { text: "Nein", wert: 1 }
                 ]
             },
-            // LP: Bewusstsein id 2x
+            // Lehrperson: Bewusstsein id 2x
             {
                 id: 21,
                 text: "Ich fühle mich sicher, wie ich im BNE-Unterricht meinen Standpunkt und meine Meinung vertreten darf und kann.",
-                bereich: "LP: Bewusstsein",
+                bereich: "Lehrperson: Bewusstsein",
                 ebene: "subjektiv",
                 typ: "slider",
                 antworten: [
@@ -482,7 +482,7 @@
             {
                 id: 22,
                 text: "Ich möchte mehr über den Beutelsbacher Konsens erfahren und mich mit der Umsetzung von BNE im Unterricht auseinandersetzen",
-                bereich: "LP: Bewusstsein",
+                bereich: "Lehrperson: Bewusstsein",
                 ebene: "interesse",
                 typ: "slider",
                 antworten: [
@@ -494,7 +494,7 @@
             {
                 id: 23,
                 text: "Der Beutelsbacher Konsens besagt, dass sich Lehrpersonen im Unterricht nicht zu politisch heiklen Themen äussern sollten.",
-                bereich: "LP: Bewusstsein",
+                bereich: "Lehrperson: Bewusstsein",
                 ebene: "objektiv",
                 typ: "mc",
                 antworten: [
@@ -506,7 +506,7 @@
             {
                 id: 25,
                 text: "Ich fühle mich noch nicht sicher, wie ich im BNE-Unterricht meinen Standpunkt und meine Meinung vertreten kann. Ich möchte deshalb noch mehr darüber erfahren, was im BNE-Unterricht erwünscht, und was verboten ist.",
-                bereich: "LP: Bewusstsein",
+                bereich: "Lehrperson: Bewusstsein",
                 ebene: "interesse",
                 typ: "slider",
                 antworten: [
@@ -516,11 +516,11 @@
                 ]
             },
 
-            // LP: Handeln id 3x
+            // Lehrperson: Handeln id 3x
             {
                 id: 31,
                 text: "Wie stark beschäftigt Sie die Frage, wie Ihr Handeln als Lehrperson das Lernen der Schüler*innen in Bezug auf BNE beeinflusst?",
-                bereich: "LP: Handeln",
+                bereich: "Lehrperson: Handeln",
                 ebene: "subjektiv",
                 typ: "slider",
                 antworten: [
@@ -532,7 +532,7 @@
             {
                 id: 32,
                 text: "Im BNE-Unterricht gibt es verschiedene normative Rahmen. Um welchen Ansatz handelt es sich bei: Vermittlung von Expertenwissen, Förderung nachhaltigen Verhaltens und Lernen für eine nachhaltige Entwicklung?",
-                bereich: "LP: Handeln",
+                bereich: "Lehrperson: Handeln",
                 ebene: "objektiv",
                 typ: "mc",
                 antworten: [
@@ -544,7 +544,7 @@
             {
                 id: 33,
                 text: "Im BNE-Unterricht gibt es verschiedene normative Rahmen. Um welchen Ansatz handelt es sich bei: Widersprüche (dialektisch) überwinden, nicht-Vorhersehbarkeit, Emotionen, Lernen durch nachhaltige Entwicklung?",
-                bereich: "LP: Handeln",
+                bereich: "Lehrperson: Handeln",
                 ebene: "objektiv",
                 typ: "mc",
                 antworten: [
@@ -556,7 +556,7 @@
             {
                 id: 34,
                 text: "Im BNE-Unterricht gibt es verschiedene normative Rahmen. Um welchen Ansatz handelt es sich bei: Befähigung zu Kritik und Reflexion, Unsicherheiten, Widersprüche; Lernen als nachhaltige Entwicklung?",
-                bereich: "LP: Handeln",
+                bereich: "Lehrperson: Handeln",
                 ebene: "objektiv",
                 typ: "mc",
                 antworten: [
@@ -568,7 +568,7 @@
             {
                 id: 35,
                 text: "Welche Gefahr besteht primär bei einem instrumentellen Ansatz im BNE-Unterricht?",
-                bereich: "LP: Handeln",
+                bereich: "Lehrperson: Handeln",
                 ebene: "objektiv",
                 typ: "mc",
                 antworten: [
@@ -579,7 +579,7 @@
             {
                 id: 36,
                 text: "Welche Gefahr besteht primär bei einem emanzipatorischen Ansatz im BNE-Unterricht?",
-                bereich: "LP: Handeln",
+                bereich: "Lehrperson: Handeln",
                 ebene: "objektiv",
                 typ: "mc",
                 antworten: [
@@ -590,7 +590,7 @@
             {
                 id: 37,
                 text: "Um mein eigenes Rollen- und Funktionsverständnis in Zusammenhang mit nachhaltiger Entwicklung und BNE als Lehrperson zu definieren, möchte ich mich mit entsprechenden Konzepten auseinandersetzen.",
-                bereich: "LP: Handeln",
+                bereich: "Lehrperson: Handeln",
                 ebene: "interesse",
                 typ: "slider",
                 antworten: [
@@ -661,11 +661,11 @@
                 ]
             },
 
-            // U: Kompetenzen id 5x
+            // Unterricht: Kompetenzen id 5x
             {
                 id: 51,
                 text: "Wie gut können Sie BNE-Kompetenzen in Ihrem Unterricht fördern?",
-                bereich: "U: Kompetenzen",
+                bereich: "Unterricht: Kompetenzen",
                 ebene: "subjektiv",
                 typ: "slider",
                 antworten: [
@@ -677,7 +677,7 @@
             {
                 id: 52,
                 text: "Die von éducation21 formulierten Kompetenzen können den DeSeCo-Schlüsselkompetenzen zugeordnet werden. Zu welcher Kategorie gehören Wissen, Systeme, Antizipation und Kreativität?",
-                bereich: "U: Kompetenzen",
+                bereich: "Unterricht: Kompetenzen",
                 ebene: "objektiv",
                 typ: "mc",
                 antworten: [
@@ -689,7 +689,7 @@
             {
                 id: 53,
                 text: "Die von éducation21 formulierten Kompetenzen können den DeSeCo-Schlüsselkompetenzen zugeordnet werden. Zu welcher Kategorie gehören Perspektive, Kooperation und Partizipation?",
-                bereich: "U: Kompetenzen",
+                bereich: "Unterricht: Kompetenzen",
                 ebene: "objektiv",
                 typ: "mc",
                 antworten: [
@@ -701,7 +701,7 @@
             {
                 id: 54,
                 text: "Die von éducation21 formulierten Kompetenzen können den DeSeCo-Schlüsselkompetenzen zugeordnet werden. Zu welcher Kategorie gehören Verantwortung, Werte und Handeln?",
-                bereich: "U: Kompetenzen",
+                bereich: "Unterricht: Kompetenzen",
                 ebene: "objektiv",
                 typ: "mc",
                 antworten: [
@@ -713,7 +713,7 @@
             {
                 id: 55,
                 text: "Im Lehrplan 21 sind spezifische BNE-Kompetenzen ausformuliert.",
-                bereich: "U: Kompetenzen",
+                bereich: "Unterricht: Kompetenzen",
                 ebene: "objektiv",
                 typ: "mc",
                 antworten: [
@@ -725,7 +725,7 @@
             {
                 id: 56,
                 text: "Um welche BNE-Kompetenz nach éducation21 handelt es sich: «Sich als Teil der Welt erfahren (Sich selbst, die soziale und natürliche Umwelt ganzheitlich und im globalen Kontext wahrnehmen)»?",
-                bereich: "U: Kompetenzen",
+                bereich: "Unterricht: Kompetenzen",
                 ebene: "objektiv",
                 typ: "mc",
                 antworten: [
@@ -737,7 +737,7 @@
             {
                 id: 57,
                 text: "Um welche Kompetenz handelt es sich: «Vorausschauend denken und handeln (Zukunftsvisionen entwickeln, sie in Bezug zur Realität und zu aktuellen Entwicklungsrichtungen setzen)»?",
-                bereich: "U: Kompetenzen",
+                bereich: "Unterricht: Kompetenzen",
                 ebene: "objektiv",
                 typ: "mc",
                 antworten: [
@@ -749,7 +749,7 @@
             {
                 id: 58,
                 text: "Um meinen Unterricht kompetenzorientiert gestalten zu können, möchte ich mich noch vertiefter mit den BNE-Kompetenzen auseinandersetzen.",
-                bereich: "U: Kompetenzen",
+                bereich: "Unterricht: Kompetenzen",
                 ebene: "interesse",
                 typ: "slider",
                 antworten: [
@@ -759,11 +759,11 @@
                 ]
             },
 
-            // U: Themen id 6x
+            // Unterricht: Themen id 6x
             {
                 id: 61,
                 text: "Wie gut kennen Sie die fächerübergreifenden Themen zu nachhaltiger Entwicklung im Lehrplan 21?",
-                bereich: "U: Themen",
+                bereich: "Unterricht: Themen",
                 ebene: "subjektiv",
                 typ: "slider",
                 antworten: [
@@ -775,7 +775,7 @@
             {
                 id: 62,
                 text: "Im Lehrplan 21 ist das Thema \"Geschlechter und Gleichstellung\" kein fächerübergreifendes Thema im Kontext Bildung für nachhaltige Entwicklung.",
-                bereich: "U: Themen",
+                bereich: "Unterricht: Themen",
                 ebene: "objektiv",
                 typ: "mc",
                 antworten: [
@@ -786,7 +786,7 @@
             {
                 id: 63,
                 text: "Im Lehrplan 21 werden sieben fächerübergreifende Themen unter der Leitidee Nachhaltiger Entwicklung aufgeführt.",
-                bereich: "U: Themen",
+                bereich: "Unterricht: Themen",
                 ebene: "objektiv",
                 typ: "mc",
                 antworten: [
@@ -797,7 +797,7 @@
             {
                 id: 64,
                 text: "Wie interessiert sind Sie daran, sich mit fächerübergreifenden Themen zur nachhaltigen Entwicklung auseinanderzusetzen?",
-                bereich: "U: Themen",
+                bereich: "Unterricht: Themen",
                 ebene: "interesse",
                 typ: "slider",
                 antworten: [
@@ -807,11 +807,11 @@
                 ]
             },
 
-            // U: Methoden id 7x
+            // Unterricht: Methoden id 7x
             {
                 id: 71,
                 text: "Wie gut beherrschen Sie unterschiedliche Methoden zur Förderung von BNE im Unterricht?",
-                bereich: "U: Methoden",
+                bereich: "Unterricht: Methoden",
                 ebene: "subjektiv",
                 typ: "slider",
                 antworten: [
@@ -823,7 +823,7 @@
             {
                 id: 72,
                 text: "Für die Förderung von kreativen Lösungsansätzen bei Nachhaltigkeitsproblemen eignet sich im Kontext von BNE die Methode Design Thinking.",
-                bereich: "U: Methoden",
+                bereich: "Unterricht: Methoden",
                 ebene: "objektiv",
                 typ: "mc",
                 antworten: [
@@ -834,7 +834,7 @@
             {
                 id: 73,
                 text: "Schüler*innen setzen sich mit einem moralischen Dilemma auseinander und beschreiben ihre Gefühle. Welcher Unterrichtszugang trifft am besten zu?",
-                bereich: "U: Methoden",
+                bereich: "Unterricht: Methoden",
                 ebene: "objektiv",
                 typ: "mc",
                 antworten: [
@@ -846,7 +846,7 @@
             {
                 id: 74,
                 text: "Wie interessiert sind Sie daran, diese Unterrichtsmethoden für BNE in Ihrem Unterricht umzusetzen?",
-                bereich: "U: Methoden",
+                bereich: "Unterricht: Methoden",
                 ebene: "interesse",
                 typ: "slider",
                 antworten: [
@@ -856,11 +856,11 @@
                 ]
             },
 
-            // S: Schulentwicklung id 8x
+            // Schule: Schulentwicklung id 8x
             {
                 id: 81,
                 text: "Welche der untenstehenden Massnahmen ist für den Whole Institution Approach **nicht** von zentraler Bedeutung?",
-                bereich: "S: Schulentwicklung",
+                bereich: "Schule: Schulentwicklung",
                 ebene: "objektiv",
                 typ: "mc",
                 antworten: [
@@ -872,7 +872,7 @@
             {
                 id: 82,
                 text: "Das wichtigste Anliegen des Whole Institution Approaches ist es, dass alle Lehrpersonen BNE in ihrem Unterricht umsetzen.",
-                bereich: "S: Schulentwicklung",
+                bereich: "Schule: Schulentwicklung",
                 ebene: "objektiv",
                 typ: "mc",
                 antworten: [
@@ -883,7 +883,7 @@
             {
                 id: 83,
                 text: "Wie gut verstehen Sie das Konzept des Whole Institution Approach für die Umsetzung von BNE?",
-                bereich: "S: Schulentwicklung",
+                bereich: "Schule: Schulentwicklung",
                 ebene: "subjektiv",
                 typ: "slider",
                 antworten: [
@@ -895,7 +895,7 @@
             {
                 id: 84,
                 text: "Wie interessiert sind Sie an der Umsetzung von BNE im schulischen Kontext als angehende Lehrperson?",
-                bereich: "S: Schulentwicklung",
+                bereich: "Schule: Schulentwicklung",
                 ebene: "interesse",
                 typ: "slider",
                 antworten: [
@@ -1368,7 +1368,7 @@ function renderResultsSummary() {
         
         // Hilfsfunktion: Bereichsnamen in zwei Zeilen aufteilen
         function splitBereichLabel(text) {
-            // Aufteilen bei ": " (z.B. "LP: Wissen" wird zu ["LP:", "Wissen"])
+            // Aufteilen bei ": " (z.B. "Lehrperson: Wissen" wird zu ["LP:", "Wissen"])
             const match = text.match(/^([^:]+):\s*(.+)$/);
             if (match) {
                 return [match[1] + ":", match[2]];
