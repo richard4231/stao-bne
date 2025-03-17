@@ -207,6 +207,7 @@
         }
         .intro-text {
             margin-bottom: 20px;
+            line-height: 1.6;
         }
         .summary-section {
             margin-bottom: 30px;
@@ -234,6 +235,23 @@
         .personal-data-label {
             font-weight: bold;
         }
+        .welcome-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .welcome-header {
+            color: #2563eb;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .welcome-card {
+            background-color: #f0f9ff;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
     </style>
 </head>
 <body>
@@ -243,11 +261,32 @@
             <!-- Wird dynamisch gefüllt -->
         </div>
         
+        <!-- Startseite -->
+        <div class="page" id="page-start">
+            <div class="welcome-container">
+                <h2 class="welcome-header">Willkommen zur Standortbestimmung Bildung für nachhaltige Entwicklung</h2>
+                <div class="welcome-card">
+                    <div class="intro-text">
+                        <p>Herzlich willkommen zur Standortbestimmung des Querschnittsthemas (QT) Bildung für nachhaltige Entwicklung (BNE).</p>
+                        <p>Diese Selbsteinschätzung hilft Ihnen dabei, Ihre Kompetenzen und Ihr Wissen im Bereich BNE zu reflektieren und einzuordnen. Mit diesem Tool können Sie Ihren aktuellen Stand in verschiedenen BNE-Bereichen ermitteln und Entwicklungspotentiale identifizieren.</p>
+                        <p>Der Fragebogen ist in folgende Hauptbereiche unterteilt:</p>
+                        <ul>
+                            <li><strong>Lehrperson:</strong> Wissen, Bewusstsein und Handeln</li>
+                            <li><strong>Unterricht:</strong> Prinzipien, Kompetenzen, Themen und Methoden</li>
+                            <li><strong>Schule:</strong> Schulentwicklung</li>
+                        </ul>
+                        <p>Nach Abschluss der Befragung erhalten Sie eine grafische Darstellung Ihrer Ergebnisse in Form eines Radar-Charts, das Ihre Selbsteinschätzung, Ihr objektives Wissen und Ihre Interessen in den verschiedenen Bereichen visualisiert.</p>
+                        <p>Bitte nehmen Sie sich ausreichend Zeit, um die Fragen sorgfältig zu beantworten. Die Bearbeitung dauert ca. 15-20 Minuten.</p>
+                        <p>Klicken Sie auf "Weiter", um mit der Eingabe Ihrer persönlichen Daten zu beginnen.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
         <!-- Seite 1: Persönliche Daten -->
         <div class="page" id="page-0">
             <div class="intro-text">
-                <p>Herzlich willkommen zur Standortbestimmung des QT Bildung für nachhaltige Entwicklung (BNE). 
-                   Bitte füllen Sie zunächst Ihre persönlichen Daten aus und beantworten Sie dann die Fragen auf den folgenden Seiten.</p>
+                <p>Bitte füllen Sie zunächst Ihre persönlichen Daten aus und beantworten Sie dann die Fragen auf den folgenden Seiten.</p>
             </div>
             <div class="form-group">
                 <label for="vorname">Vorname</label>
@@ -979,6 +1018,7 @@
 
         // Seiten nach Bereichen erstellen
         function initPages() {
+            // Startseite ist bereits vorhanden (page-start)
             // Persönliche Daten-Seite ist bereits vorhanden (page-0)
             
             // Gruppiere Fragen nach Bereichen
@@ -988,7 +1028,7 @@
             }, {});
             
             // Erstelle für jeden Bereich eine Seite
-            let pageIndex = 1; // Start bei 1, weil 0 bereits vorhanden sind
+            let pageIndex = 1; // Start bei 1, weil 0 bereits persönliche Daten sind
             BEREICHE.forEach(bereich => {
                 const pageId = `page-${pageIndex}`;
                 pages.push(pageId);
@@ -1026,7 +1066,7 @@
             const progressContainer = document.getElementById('progressIndicator');
             progressContainer.innerHTML = '';
             
-            const totalPages = pages.length + 1; // +1 für die persönliche Daten-Seite
+            const totalPages = pages.length + 2; // +1 für Startseite, +1 für persönliche Daten
             
             for (let i = 0; i < totalPages; i++) {
                 const dot = document.createElement('div');
@@ -1040,13 +1080,13 @@
 
         // Fragen für den aktuellen Bereich rendern
         function renderFragen() {
-            if (currentPage === 0 || currentPage === pages.length) {
-                return; // Keine Fragen auf der ersten und letzten Seite
+            if (currentPage === 0 || currentPage === 1 || currentPage === pages.length + 1) {
+                return; // Keine Fragen auf der Start-, persönlichen Daten- und Ergebnisseite
             }
             
-            const bereichIndex = currentPage - 1; // -1 weil erste Seite persönliche Daten ist
+            const bereichIndex = currentPage - 2; // -2 weil Start- und persönliche Daten-Seite
             const bereich = BEREICHE[bereichIndex];
-            const bereichContainer = document.getElementById(`bereich-${currentPage}`);
+            const bereichContainer = document.getElementById(`bereich-${currentPage - 1}`);
             
             // Fragen für diesen Bereich filtern
             const bereichFragen = FRAGEN.filter(frage => frage.bereich === bereich);
@@ -1452,20 +1492,24 @@ function renderResultsSummary() {
                 activePage.classList.remove('active');
             }
             
-            // Sammle persönliche Daten, wenn von Seite 0 weiternavigiert wird
-            if (currentPage === 0 && pageIndex > 0) {
+            // Sammle persönliche Daten, wenn von Seite 1 (persönliche Daten) weiternavigiert wird
+            if (currentPage === 1 && pageIndex > 1) {
                 collectPersonalData();
             }
             
             // Zeige neue Seite
             currentPage = pageIndex;
             
-            // Für die persönliche Daten-Seite
+            // Für die Startseite
             if (currentPage === 0) {
+                document.getElementById('page-start').classList.add('active');
+            }
+            // Für die persönliche Daten-Seite
+            else if (currentPage === 1) {
                 document.getElementById('page-0').classList.add('active');
             } 
             // Für die Ergebnisseite
-            else if (currentPage === pages.length) {
+            else if (currentPage === pages.length + 1) {
                 renderPersonalData();
                 renderResultsSummary();
                 document.getElementById('page-final').classList.add('active');
@@ -1483,12 +1527,12 @@ function renderResultsSummary() {
             // Für die Frageseiten
             else {
                 renderFragen();
-                document.getElementById(pages[currentPage - 1]).classList.add('active');
+                document.getElementById(pages[currentPage - 2]).classList.add('active');
             }
             
             // Navigation-Buttons aktualisieren
             document.getElementById('prevButton').disabled = currentPage === 0;
-            document.getElementById('nextButton').textContent = currentPage === pages.length ? 'Abschliessen' : 'Weiter';
+            document.getElementById('nextButton').textContent = currentPage === pages.length + 1 ? 'Abschliessen' : 'Weiter';
             
             // Fortschrittsanzeige aktualisieren
             updateProgressIndicator();
@@ -1502,7 +1546,7 @@ function renderResultsSummary() {
         });
 
         document.getElementById('nextButton').addEventListener('click', () => {
-            if (currentPage < pages.length) {
+            if (currentPage < pages.length + 1) {
                 goToPage(currentPage + 1);
             } else {
                 // Formular abschliessen - hier könnten Daten gespeichert/gesendet werden
@@ -1515,7 +1559,7 @@ function renderResultsSummary() {
 
         // Responsive Canvas
         window.addEventListener('resize', () => {
-            if (currentPage === pages.length) {
+            if (currentPage === pages.length + 1) {
                 drawRadar();
             }
         });
@@ -1523,7 +1567,7 @@ function renderResultsSummary() {
         // Initialisierung
         function init() {
             initPages();
-            goToPage(0);
+            goToPage(0); // Start mit der Startseite
         }
 
         // Globale Funktion für Event-Handler
