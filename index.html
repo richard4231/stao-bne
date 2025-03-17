@@ -235,6 +235,34 @@
         .personal-data-label {
             font-weight: bold;
         }
+        .subjects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .subject-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background-color: #f8fafc;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            user-select: none;
+        }
+        .subject-item:hover {
+            background-color: #e0f2fe;
+        }
+        .subject-item.selected {
+            background-color: #dbeafe;
+            border: 1px solid #93c5fd;
+        }
+        .subject-item input {
+            width: auto;
+            cursor: pointer;
+        }
         .welcome-container {
             max-width: 800px;
             margin: 0 auto;
@@ -243,11 +271,6 @@
         .welcome-header {
             color: #2563eb;
             margin-bottom: 20px;
-            text-align: center;
-        }
-        .welcome-title {
-            color: #051b4b;
-            margin-bottom: 25px;
             text-align: center;
         }
         .welcome-card {
@@ -261,7 +284,7 @@
 </head>
 <body>
     <div class="container">
-        <h1 class="welcome-title">Standortbestimmung BNE</h1>
+        <h1>Standortbestimmung BNE</h1>
         <div class="progress-indicator" id="progressIndicator">
             <!-- Wird dynamisch gefüllt -->
         </div>
@@ -310,8 +333,10 @@
                 <input type="email" id="email" name="email">
             </div>
             <div class="form-group">
-                <label for="studienfach">Studienfächer</label>
-                <input type="text" id="studienfach" name="studienfach">
+                <label>Studienfächer (Mehrfachauswahl möglich)</label>
+                <div class="subjects-grid" id="subjects-container">
+                    <!-- Wird dynamisch durch JavaScript gefüllt -->
+                </div>
             </div>
             <div class="form-group">
                 <label for="lerngelegenheiten">Besuchte Lerngelegenheiten mit Querschnitt BNE</label>
@@ -1020,6 +1045,25 @@
         let personalData = {};
         let currentPage = 0;
         let pages = [];
+        
+        // Liste der verfügbaren Studienfächer
+        const STUDIENFAECHER = [
+            "Deutsch",
+            "Mathematik",
+            "Französisch",
+            "Englisch",
+            "NMG (Natur, Mensch, Gesellschaft)",
+            "Geschichte",
+            "Geografie",
+            "Biologie",
+            "Chemie",
+            "Physik",
+            "Musik",
+            "Kunst/Gestalten",
+            "Sport",
+            "Informatik",
+            "WAH (Wirtschaft, Arbeit, Haushalt)"
+        ];
 
         // Seiten nach Bereichen erstellen
         function initPages() {
@@ -1153,12 +1197,18 @@
 
         // Sammeln der persönlichen Daten
         function collectPersonalData() {
+            // Sammle ausgewählte Studienfächer
+            const selectedSubjects = [];
+            document.querySelectorAll('#subjects-container input:checked').forEach(checkbox => {
+                selectedSubjects.push(checkbox.value);
+            });
+            
             personalData = {
                 vorname: document.getElementById('vorname').value,
                 nachname: document.getElementById('nachname').value,
                 matrikelnummer: document.getElementById('matrikelnummer').value,
                 email: document.getElementById('email').value,
-                studienfach: document.getElementById('studienfach').value,
+                studienfaecher: selectedSubjects,
                 lerngelegenheiten: document.getElementById('lerngelegenheiten').value
             };
         }
@@ -1180,13 +1230,23 @@
                 nachname: 'Nachname',
                 matrikelnummer: 'Matrikelnummer',
                 email: 'E-Mail',
-                studienfach: 'Studienfächer',
+                studienfaecher: 'Studienfächer',
                 lerngelegenheiten: 'Besuchte Lerngelegenheiten'
             };
             
             let html = '';
             for (const [key, value] of Object.entries(personalData)) {
-                if (value.trim() !== '') {
+                // Spezialbehandlung für Studienfächer-Array
+                if (key === 'studienfaecher' && Array.isArray(value) && value.length > 0) {
+                    html += `
+                        <div class="personal-data-item">
+                            <span class="personal-data-label">${labels[key]}:</span> 
+                            ${value.join(', ')}
+                        </div>
+                    `;
+                }
+                // Normale Textfelder
+                else if (!Array.isArray(value) && value.trim() !== '') {
                     html += `
                         <div class="personal-data-item">
                             <span class="personal-data-label">${labels[key]}:</span> 
@@ -1357,7 +1417,7 @@ function renderResultsSummary() {
             ctx.stroke();
 
             // Beschriftungen
-            ctx.font = 'bold 50px Arial';
+            ctx.font = 'bold 30px Arial';
             ctx.fillStyle = '#000';
             
             BEREICHE.forEach((bereich, i) => {
@@ -1578,8 +1638,42 @@ function renderResultsSummary() {
         // Globale Funktion für Event-Handler
         window.handleAntwort = handleAntwort;
 
+        // Funktion zum Erstellen der Studienfächer-Auswahl
+        function renderSubjectsSelection() {
+            const container = document.getElementById('subjects-container');
+            if (!container) return;
+            
+            container.innerHTML = STUDIENFAECHER.map(fach => `
+                <label class="subject-item">
+                    <input type="checkbox" name="studienfach" value="${fach}">
+                    ${fach}
+                </label>
+            `).join('');
+            
+            // Event-Listener für Styling der ausgewählten Fächer
+            container.querySelectorAll('.subject-item').forEach(item => {
+                item.addEventListener('click', function(e) {
+                    // Verhindern, dass der Click-Event auf dem Label das Checkbox-Toggle verhindert
+                    if (e.target !== this.querySelector('input')) {
+                        const checkbox = this.querySelector('input');
+                        checkbox.checked = !checkbox.checked;
+                    }
+                    
+                    // Styling-Klasse hinzufügen/entfernen
+                    if (this.querySelector('input').checked) {
+                        this.classList.add('selected');
+                    } else {
+                        this.classList.remove('selected');
+                    }
+                });
+            });
+        }
+
         // Starte die Anwendung
         init();
+        
+        // Studienfächer-Auswahl rendern
+        renderSubjectsSelection();
     </script>
 </body>
 </html>
