@@ -62,7 +62,7 @@
         }
         .mc-option {
             display: flex;
-            align-items: center;
+            align-item: center;
             gap: 8px;
             padding: 8px;
             border-radius: 4px;
@@ -115,7 +115,7 @@
         .radar-container {
             display: flex;
             flex-direction: column;
-            align-items: center;
+            align-item: center;
             justify-content: center;
             width: 100%;
             height: 100%;
@@ -138,7 +138,7 @@
         }
         .legend-item {
             display: flex;
-            align-items: center;
+            align-item: center;
             gap: 8px;
             font-size: 14px;
             font-weight: bold;
@@ -246,8 +246,8 @@
         <!-- Seite 1: Persönliche Daten -->
         <div class="page" id="page-0">
             <div class="intro-text">
-                <p>Willkommen zur Standortbestimmung im Bereich Bildung für nachhaltige Entwicklung (BNE). 
-                   Bitte füllen Sie zunächst Ihre persönlichen Daten aus und beantworten Sie dann die Fragen auf den folgenden Seiten.</p>
+                <p>Herzlich willkommen zur Standortbestimmung des QT Bildung für nachhaltige Entwicklung (BNE). 
+                   Bitte füllen Sie zunächst Ihre persönlichen Daten aus und beantworten Sie dann die Fragen auf den folgenden Seiten. V1.01/ARI</p>
             </div>
             <div class="form-group">
                 <label for="vorname">Vorname</label>
@@ -281,7 +281,12 @@
         <!-- Letzte Seite: Radar und Zusammenfassung -->
         <div class="page" id="page-final">
             <h2>Ihre Ergebnisse</h2>
-            <p>Vielen Dank für die Beantwortung der Fragen. Hier ist die Zusammenfassung Ihrer Ergebnisse:</p>
+            <p>
+            Vielen Dank für die Beantwortung der Fragen. Hier ist die Zusammenfassung Ihrer Ergebnisse. Drücken Sie auf Abschliessen. Laden Sie diese bitte als pdf herunter und senden Sie das pdf bitte fristgerecht an: barbara.bamert@phbern.ch<br></br>
+            Fügen Sie die Ergebnisse Ihrer Standortbestimmung bitte noch in Ihr professionelles BNE-Konzept ein oder verlinken Sie es.<br></br>
+            An der Standortbestimmung werden Rückmeldungen zu Spiderprofilen und Vorschläge gegeben, welche Lerngelegenheiten zu Ihrem Profil passen würden. Falls Sie eine individuelle Rückmeldung wünschen, können Sie gerne per Mail einen Beratungstermin vereinbaren.<br></br>
+
+            </p>
             
             <div class="grid results-grid">
                 <div>
@@ -358,22 +363,22 @@
         const MAX_WERT = 3;
         
         const BEREICHE = [
-            "LP: Wissen",
-            "LP: Bewusstsein",
-            "LP: Handeln",
+            "Lehrperson: Wissen", 
+            "Lehrperson: Bewusstsein",
+            "Lehrperson: Handeln",
             "Unterricht: Prinzipien",
-            "U: Kompetenzen",
-            "U: Themen",
-            "U: Methoden",
-            "S: Schulentwicklung",
+            "Unterricht: Kompetenzen",
+            "Unterricht: Themen",
+            "Unterricht: Methoden",
+            "Schule: Schulentwicklung",
         ];
 
         const FRAGEN = [
-            // LP: Wissen Nummerierung: 1x
+            // Lehrperson: Wissen Nummerierung: 1x
             {
                 id: 11,
                 text: "Wie gut kennen Sie sich mit den SDG aus?",
-                bereich: "LP: Wissen",
+                bereich: "Lehrperson: Wissen",
                 ebene: "subjektiv",
                 typ: "slider",
                 antworten: [
@@ -386,7 +391,7 @@
             {
                 id: 12,
                 text: "Zu welcher Umsetzungsstrategie von Nachhaltigkeit passt die folgende Definition: «Weniger produzieren und konsumieren: Energie- und Materialverbrauch begrenzen. Beispiel: Vom Besitzen zum Teilen»",
-                bereich: "LP: Wissen",
+                bereich: "Lehrperson: Wissen",
                 ebene: "objektiv",
                 typ: "mc",
                 antworten: [
@@ -398,7 +403,7 @@
             {
                 id: 13,
                 text: "Wie stark interessieren Sie sich für die SDG?",
-                bereich: "LP: Wissen",
+                bereich: "Lehrperson: Wissen",
                 ebene: "interesse",
                 typ: "slider",
                 antworten: [
@@ -411,7 +416,7 @@
             {
                 id: 14,
                 text: "Um mein Unterricht zielorientierter gestalten zu können, möchte ich noch mehr über die Leitidee von Nachhaltiger Entwicklung und die Ziele einer BNE erfahren.",
-                bereich: "LP: Wissen",
+                bereich: "Lehrperson: Wissen",
                 ebene: "interesse",
                 typ: "slider",
                 antworten: [
@@ -480,11 +485,11 @@
                     { text: "Gefahr des Zeitmangels", wert: 3 } // korrekte Antwort
                 ]
             },
-            // LP: Bewusstsein id 2x
+            // Lehrperson: Bewusstsein id 2x
             {
                 id: 21,
                 text: "Ich fühle mich sicher, wie ich im BNE-Unterricht meinen Standpunkt und meine Meinung vertreten darf und kann.",
-                bereich: "LP: Bewusstsein",
+                bereich: "Lehrperson: Bewusstsein",
                 ebene: "subjektiv",
                 typ: "slider",
                 antworten: [
@@ -496,7 +501,7 @@
             {
                 id: 22,
                 text: "Ich möchte mehr über den Beutelsbacher Konsens erfahren und mich mit der Umsetzung von BNE im Unterricht auseinandersetzen",
-                bereich: "LP: Bewusstsein",
+                bereich: "Lehrperson: Bewusstsein",
                 ebene: "interesse",
                 typ: "slider",
                 antworten: [
@@ -508,7 +513,7 @@
             {
                 id: 23,
                 text: "Der Beutelsbacher Konsens besagt, dass sich Lehrpersonen im Unterricht nicht zu politisch heiklen Themen äussern sollten.",
-                bereich: "LP: Bewusstsein",
+                bereich: "Lehrperson: Bewusstsein",
                 ebene: "objektiv",
                 typ: "mc",
                 antworten: [
@@ -532,7 +537,7 @@
             {
                 id: 25,
                 text: "Ich fühle mich noch nicht sicher, wie ich im BNE-Unterricht meinen Standpunkt und meine Meinung vertreten kann. Ich möchte deshalb noch mehr darüber erfahren, was im BNE-Unterricht erwünscht, und was verboten ist.",
-                bereich: "LP: Bewusstsein",
+                bereich: "Lehrperson: Bewusstsein",
                 ebene: "interesse",
                 typ: "slider",
                 antworten: [
@@ -543,11 +548,11 @@
                 ]
             },
 
-            // LP: Handeln id 3x
+            // Lehrperson: Handeln id 3x
             {
                 id: 31,
                 text: "Wie stark beschäftigt Sie die Frage, wie Ihr Handeln als Lehrperson das Lernen der Schüler*innen in Bezug auf BNE beeinflusst?",
-                bereich: "LP: Handeln",
+                bereich: "Lehrperson: Handeln",
                 ebene: "subjektiv",
                 typ: "slider",
                 antworten: [
@@ -597,7 +602,7 @@
             {
                 id: 36,
                 text: "Um mein eigenes Rollen- und Funktionsverständnis in Zusammenhang mit nachhaltiger Entwicklung und BNE als Lehrperson zu definieren, möchte ich mich mit entsprechenden Konzepten auseinandersetzen.",
-                bereich: "LP: Handeln",
+                bereich: "Lehrperson: Handeln",
                 ebene: "interesse",
                 typ: "slider",
                 antworten: [
@@ -671,11 +676,11 @@
                 ]
             },
 
-            // U: Kompetenzen id 5x
+            // Unterricht: Kompetenzen id 5x
             {
                 id: 51,
                 text: "Wie gut können Sie BNE-Kompetenzen in Ihrem Unterricht fördern?",
-                bereich: "U: Kompetenzen",
+                bereich: "Unterricht: Kompetenzen",
                 ebene: "subjektiv",
                 typ: "slider",
                 antworten: [
@@ -773,11 +778,11 @@
                 ]
             },
 
-            // U: Themen id 6x
+            // Unterricht: Themen id 6x
             {
                 id: 61,
                 text: "Wie gut kennen Sie die fächerübergreifenden Themen zu nachhaltiger Entwicklung im Lehrplan 21?",
-                bereich: "U: Themen",
+                bereich: "Unterricht: Themen",
                 ebene: "subjektiv",
                 typ: "slider",
                 antworten: [
@@ -790,7 +795,7 @@
             {
                 id: 62,
                 text: "Im Lehrplan 21 ist das Thema \"Geschlechter und Gleichstellung\" kein fächerübergreifendes Thema im Kontext Bildung für nachhaltige Entwicklung.",
-                bereich: "U: Themen",
+                bereich: "Unterricht: Themen",
                 ebene: "objektiv",
                 typ: "mc",
                 antworten: [
@@ -801,7 +806,7 @@
             {
                 id: 63,
                 text: "Im Lehrplan 21 werden sieben fächerübergreifende Themen unter der Leitidee Nachhaltiger Entwicklung aufgeführt.",
-                bereich: "U: Themen",
+                bereich: "Unterricht: Themen",
                 ebene: "objektiv",
                 typ: "mc",
                 antworten: [
@@ -812,7 +817,7 @@
             {
                 id: 64,
                 text: "Wie interessiert sind Sie daran, sich mit fächerübergreifenden Themen zur nachhaltigen Entwicklung auseinanderzusetzen?",
-                bereich: "U: Themen",
+                bereich: "Unterricht: Themen",
                 ebene: "interesse",
                 typ: "slider",
                 antworten: [
@@ -847,11 +852,11 @@
                 ]
             },
 
-            // U: Methoden id 7x
+            // Unterricht: Methoden id 7x
             {
                 id: 71,
                 text: "Wie gut beherrschen Sie unterschiedliche Methoden zur Förderung von BNE im Unterricht?",
-                bereich: "U: Methoden",
+                bereich: "Unterricht: Methoden",
                 ebene: "subjektiv",
                 typ: "slider",
                 antworten: [
@@ -864,7 +869,7 @@
             {
                 id: 72,
                 text: "Für die Förderung von kreativen Lösungsansätzen bei Nachhaltigkeitsproblemen eignet sich im Kontext von BNE die Methode Design Thinking.",
-                bereich: "U: Methoden",
+                bereich: "Unterricht: Methoden",
                 ebene: "objektiv",
                 typ: "mc",
                 antworten: [
@@ -875,7 +880,7 @@
             {
                 id: 73,
                 text: "Schüler*innen setzen sich mit einem moralischen Dilemma auseinander und beschreiben ihre Gefühle. Welcher Unterrichtszugang trifft am besten zu?",
-                bereich: "U: Methoden",
+                bereich: "Unterricht: Methoden",
                 ebene: "objektiv",
                 typ: "mc",
                 antworten: [
@@ -887,7 +892,7 @@
             {
                 id: 74,
                 text: "Wie interessiert sind Sie daran, diese Unterrichtsmethoden für BNE in Ihrem Unterricht umzusetzen?",
-                bereich: "U: Methoden",
+                bereich: "Unterricht: Methoden",
                 ebene: "interesse",
                 typ: "slider",
                 antworten: [
@@ -909,11 +914,11 @@
                 ]
             },
 
-            // S: Schulentwicklung id 8x
+            // Schule: Schulentwicklung id 8x
             {
                 id: 81,
                 text: "Welche der untenstehenden Massnahmen ist für den Whole Institution Approach **nicht** von zentraler Bedeutung?",
-                bereich: "S: Schulentwicklung",
+                bereich: "Schule: Schulentwicklung",
                 ebene: "objektiv",
                 typ: "mc",
                 antworten: [
@@ -925,7 +930,7 @@
             {
                 id: 82,
                 text: "Das wichtigste Anliegen des Whole Institution Approaches ist es, dass alle Lehrpersonen BNE in ihrem Unterricht umsetzen.",
-                bereich: "S: Schulentwicklung",
+                bereich: "Schule: Schulentwicklung",
                 ebene: "objektiv",
                 typ: "mc",
                 antworten: [
@@ -936,7 +941,7 @@
             {
                 id: 83,
                 text: "Wie gut verstehen Sie das Konzept des Whole Institution Approach für die Umsetzung von BNE?",
-                bereich: "S: Schulentwicklung",
+                bereich: "Schule: Schulentwicklung",
                 ebene: "subjektiv",
                 typ: "slider",
                 antworten: [
@@ -949,7 +954,7 @@
             {
                 id: 84,
                 text: "Wie interessiert sind Sie an der Umsetzung von BNE im schulischen Kontext als angehende Lehrperson?",
-                bereich: "S: Schulentwicklung",
+                bereich: "Schule: Schulentwicklung",
                 ebene: "interesse",
                 typ: "slider",
                 antworten: [
@@ -1198,11 +1203,11 @@ function renderResultsSummary() {
 
         //Canvas-Initialisierung für den Radar-Chart
         function setupCanvas(canvas) {
-            // Setze Canvas auf Größe mit guter Auflösung
+            // Setze Canvas auf Grösse mit guter Auflösung
             canvas.width = 1600;
             canvas.height = 1600;
             
-            // Setze Display-Größe via CSS
+            // Setze Display-Grösse via CSS
             canvas.style.width = '100%';
             canvas.style.height = 'auto';
             canvas.style.maxWidth = '1000px';
@@ -1276,7 +1281,7 @@ function renderResultsSummary() {
                 ctx.strokeStyle = '#d1d5db';
                 ctx.lineWidth = 1;
                 
-                // Berechne den aktuellen Radius (von innen nach außen)
+                // Berechne den aktuellen Radius (von innen nach aussen)
                 const currentRadius = radius * (r / 3);
                 
                 // Zeichne einen Kreis mit dem aktuellen Radius
@@ -1293,7 +1298,7 @@ function renderResultsSummary() {
                 */
             }
 
-            // Achsenlinien vom Zentrum zu den äußeren Punkten
+            // Achsenlinien vom Zentrum zu den äusseren Punkten
             ctx.beginPath();
             ctx.strokeStyle = '#d1d5db';
             ctx.lineWidth = 1;
@@ -1336,12 +1341,13 @@ function renderResultsSummary() {
                 const lines = splitBereichLabel(bereich);
                 
                 // Erste Zeile (kleiner Abstand nach oben)
+                ctx.font = 'bold 30px Arial';
                 ctx.fillText(lines[0], x, y - 15);
                 
                 // Zweite Zeile (kleiner Abstand nach unten)
+                ctx.font = '30px Arial';
                 ctx.fillText(lines[1], x, y + 15);
             });
-            
             // Zurücksetzen des textAlign
             ctx.textAlign = 'left';
 
@@ -1422,7 +1428,7 @@ function renderResultsSummary() {
         
         // Hilfsfunktion: Bereichsnamen in zwei Zeilen aufteilen
         function splitBereichLabel(text) {
-            // Aufteilen bei ": " (z.B. "LP: Wissen" wird zu ["LP:", "Wissen"])
+            // Aufteilen bei ": " (z.B. "Lehrperson: Wissen" wird zu ["LP:", "Wissen"])
             const match = text.match(/^([^:]+):\s*(.+)$/);
             if (match) {
                 return [match[1] + ":", match[2]];
@@ -1502,8 +1508,8 @@ function renderResultsSummary() {
                 // Formular abschliessen - hier könnten Daten gespeichert/gesendet werden
 
                 window.print();
-                window.open('mailto:BNE@example.com?subject=subject&body=Bitte das als PDF gespeicherte Ergebnis anhängen und einschicken');
-                alert('Standortbestimmung abgeschlossen!');
+                //window.open('mailto:BNE@example.com?subject=subject&body=Bitte das als PDF gespeicherte Ergebnis anhängen und einschicken');
+                //alert('Standortbestimmung abgeschlossen!');
             }
         });
 
