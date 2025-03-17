@@ -988,7 +988,7 @@
             }, {});
             
             // Erstelle für jeden Bereich eine Seite
-            let pageIndex = 1;
+            let pageIndex = 1; // Start bei 1, weil 0 bereits vorhanden sind
             BEREICHE.forEach(bereich => {
                 const pageId = `page-${pageIndex}`;
                 pages.push(pageId);
