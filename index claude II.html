@@ -422,19 +422,6 @@
                 ]
             },
             {
-                id: 15,
-                text: "Wie schätzen Sie Ihre Kompetenzen im Bereich der BNE im Unterricht ein?",
-                bereich: "LP: Wissen",
-                ebene: "subjektiv",
-                typ: "slider",
-                antworten: [
-                    { text: "Keine Antwort", wert: 0 },
-                    { text: "wenig Kenntnisse", wert: 1 },
-                    { text: "mittlere Kompetenzen", wert: 2 },
-                    { text: "hohe Kompetenzen", wert: 3 }
-                ]
-            },
-            {
                 id: 16,
                 text: "Der Lehrplan 21 bezieht sich auf das «Drei-Dimensionen-Modell der Nachhaltigen Entwicklung». Welche ist keine der drei Dimensionen?",
                 bereich: "LP: Wissen",
@@ -482,6 +469,29 @@
                     { text: "Transformativer Ansatz", wert: 1 }
                 ]
             },
+            {
+                id: 182,
+                text: "Im BNE-Unterricht gibt es verschiedene normative Rahmen. Um welchen Ansatz handelt es sich bei: Widersprüche (dialektisch) überwinden, nicht-Vorhersehbarkeit, Emotionen, Lernen durch nachhaltige Entwicklung?",
+                bereich: "LP: Wisssen",
+                ebene: "objektiv",
+                typ: "mc",
+                antworten: [
+                    { text: "Instrumenteller Ansatz", wert: 1 },
+                    { text: "Emanzipatorischer Ansatz", wert: 1 },
+                    { text: "Transformativer Ansatz", wert: 3 } // korrekte Antwort
+                ]
+            },
+            {
+                id: 183,
+                text: "Welche Gefahr besteht primär bei einem emanzipatorischen Ansatz im BNE-Unterricht?",
+                bereich: "LP: Wissen",
+                ebene: "objektiv",
+                typ: "mc",
+                antworten: [
+                    { text: "Gefahr der Indoktrination", wert: 1 },
+                    { text: "Gefahr des Zeitmangels", wert: 3 } // korrekte Antwort
+                ]
+            },
             // LP: Bewusstsein id 2x
             {
                 id: 21,
@@ -520,6 +530,18 @@
                 ]
             },
             {
+                id: 24,
+                text: "Ich kann mich gut zu den Zielen einer (B)NE positionieren und habe eine klare Haltung zu dem aktuellen Diskurs.",
+                bereich: "LP: Bewusstsein",
+                ebene: "subjektiv",
+                typ: "slider",
+                antworten: [
+                    { text: "trifft nicht zu", wert: 1 },
+                    { text: "trifft eher zu", wert: 2 },
+                    { text: "trifft zu", wert: 3 }
+                ]
+            },
+            {
                 id: 25,
                 text: "Ich fühle mich noch nicht sicher, wie ich im BNE-Unterricht meinen Standpunkt und meine Meinung vertreten kann. Ich möchte deshalb noch mehr darüber erfahren, was im BNE-Unterricht erwünscht, und was verboten ist.",
                 bereich: "LP: Bewusstsein",
@@ -548,53 +570,44 @@
                 ]
             },
             {
-                id: 33,
-                text: "Im BNE-Unterricht gibt es verschiedene normative Rahmen. Um welchen Ansatz handelt es sich bei: Widersprüche (dialektisch) überwinden, nicht-Vorhersehbarkeit, Emotionen, Lernen durch nachhaltige Entwicklung?",
+                id: 32,
+                text: "Die lernförderlichen Gelegenheiten werden im Rahmen der Agenda 2030 zusammen mit den Schlüsselkompetenzen einer BNE als wichtig erachtet.",
                 bereich: "LP: Handeln",
                 ebene: "objektiv",
                 typ: "mc",
                 antworten: [
-                    { text: "Instrumenteller Ansatz", wert: 1 },
-                    { text: "Emanzipatorischer Ansatz", wert: 1 },
-                    { text: "Transformativer Ansatz", wert: 3 } // korrekte Antwort
+                    { text: "richtig", wert: 3 }, // korrekte Antwort
+                    { text: "falsch", wert: 1 }, 
+                   
                 ]
             },
             {
-                id: 34,
-                text: "Im BNE-Unterricht gibt es verschiedene normative Rahmen. Um welchen Ansatz handelt es sich bei: Befähigung zu Kritik und Reflexion, Unsicherheiten, Widersprüche; Lernen als nachhaltige Entwicklung?",
+                id: 33,
+                text: "Der Whole Institution Approach (WIA) zeigt Möglichkeiten auf, wie BNE in der Schule ohne Einbezug von ausserschulischen Akteur:innen umgesetzt werden kann.",
                 bereich: "LP: Handeln",
                 ebene: "objektiv",
                 typ: "mc",
                 antworten: [
-                    { text: "Instrumenteller Ansatz", wert: 1 },
-                    { text: "Emanzipatorischer Ansatz", wert: 3 }, // korrekte Antwort
-                    { text: "Transformativer Ansatz", wert: 1 }
+                    { text: "richtig", wert: 1 }, 
+                    { text: "falsch", wert: 3 }, // korrekte Antwort
+                   
                 ]
             },
             {
                 id: 35,
-                text: "Welche Gefahr besteht primär bei einem instrumentellen Ansatz im BNE-Unterricht?",
+                text: "Inwiefern haben Sie BNE bereits in Ihrem Unterricht / in Ihren Praktika integrieren können?",
                 bereich: "LP: Handeln",
-                ebene: "objektiv",
-                typ: "mc",
+                ebene: "subjektiv",
+                typ: "slider",
                 antworten: [
-                    { text: "Gefahr der Indoktrination", wert: 3 }, // korrekte Antwort
-                    { text: "Gefahr des Zeitmangels", wert: 1 }
+                    { text: "Keine Antwort", wert: 0 },
+                    { text: "Gar nicht", wert: 1 },
+                    { text: "Ein bisschen", wert: 2 },
+                    { text: "Stark", wert: 3 }
                 ]
             },
             {
                 id: 36,
-                text: "Welche Gefahr besteht primär bei einem emanzipatorischen Ansatz im BNE-Unterricht?",
-                bereich: "LP: Handeln",
-                ebene: "objektiv",
-                typ: "mc",
-                antworten: [
-                    { text: "Gefahr der Indoktrination", wert: 1 },
-                    { text: "Gefahr des Zeitmangels", wert: 3 } // korrekte Antwort
-                ]
-            },
-            {
-                id: 37,
                 text: "Um mein eigenes Rollen- und Funktionsverständnis in Zusammenhang mit nachhaltiger Entwicklung und BNE als Lehrperson zu definieren, möchte ich mich mit entsprechenden Konzepten auseinandersetzen.",
                 bereich: "LP: Handeln",
                 ebene: "interesse",
@@ -686,30 +699,6 @@
             },
             {
                 id: 52,
-                text: "Die von éducation21 formulierten Kompetenzen können den DeSeCo-Schlüsselkompetenzen zugeordnet werden. Zu welcher Kategorie gehören Wissen, Systeme, Antizipation und Kreativität?",
-                bereich: "U: Kompetenzen",
-                ebene: "objektiv",
-                typ: "mc",
-                antworten: [
-                    { text: "Interaktive Verwendung von Medien und Tools", wert: 3 }, // korrekte Antwort
-                    { text: "Interagieren in heterogenen Gruppen", wert: 1 },
-                    { text: "Eigenständiges Handeln", wert: 1 }
-                ]
-            },
-            {
-                id: 53,
-                text: "Die von éducation21 formulierten Kompetenzen können den DeSeCo-Schlüsselkompetenzen zugeordnet werden. Zu welcher Kategorie gehören Perspektive, Kooperation und Partizipation?",
-                bereich: "U: Kompetenzen",
-                ebene: "objektiv",
-                typ: "mc",
-                antworten: [
-                    { text: "Interaktive Verwendung von Medien und Tools", wert: 1 },
-                    { text: "Interagieren in heterogenen Gruppen", wert: 3 }, // korrekte Antwort
-                    { text: "Eigenständiges Handeln", wert: 1 }
-                ]
-            },
-            {
-                id: 54,
                 text: "Die von éducation21 formulierten Kompetenzen können den DeSeCo-Schlüsselkompetenzen zugeordnet werden. Zu welcher Kategorie gehören Verantwortung, Werte und Handeln?",
                 bereich: "U: Kompetenzen",
                 ebene: "objektiv",
@@ -721,7 +710,7 @@
                 ]
             },
             {
-                id: 55,
+                id: 53,
                 text: "Im Lehrplan 21 sind spezifische BNE-Kompetenzen ausformuliert.",
                 bereich: "U: Kompetenzen",
                 ebene: "objektiv",
@@ -733,7 +722,20 @@
                 ]
             },
             {
-                id: 56,
+                id: 54,
+                text: "Wie gut kennen Sie sich mit den BNE-Kompetenzen aus?",
+                bereich: "U: Kompetenzen",
+                ebene: "subjektiv",
+                typ: "slider",
+                antworten: [
+                    { text: "Keine Antwort", wert: 0 },
+                    { text: "wenig Kenntnisse", wert: 1 },
+                    { text: "mittlere Kompetenzen", wert: 2 },
+                    { text: "hohe Kompetenzen", wert: 3 }
+                ]
+            },
+            {
+                id: 55,
                 text: "Um welche BNE-Kompetenz nach éducation21 handelt es sich: «Sich als Teil der Welt erfahren (Sich selbst, die soziale und natürliche Umwelt ganzheitlich und im globalen Kontext wahrnehmen)»?",
                 bereich: "U: Kompetenzen",
                 ebene: "objektiv",
@@ -745,19 +747,7 @@
                 ]
             },
             {
-                id: 57,
-                text: "Um welche Kompetenz handelt es sich: «Vorausschauend denken und handeln (Zukunftsvisionen entwickeln, sie in Bezug zur Realität und zu aktuellen Entwicklungsrichtungen setzen)»?",
-                bereich: "U: Kompetenzen",
-                ebene: "objektiv",
-                typ: "mc",
-                antworten: [
-                    { text: "Systeme", wert: 1 },
-                    { text: "Antizipation", wert: 3 }, // korrekte Antwort
-                    { text: "Kreativität", wert: 1 }
-                ]
-            },
-            {
-                id: 58,
+                id: 56,
                 text: "Um meinen Unterricht kompetenzorientiert gestalten zu können, möchte ich mich noch vertiefter mit den BNE-Kompetenzen auseinandersetzen.",
                 bereich: "U: Kompetenzen",
                 ebene: "interesse",
@@ -767,6 +757,31 @@
                     { text: "stimme eher nicht zu", wert: 1 },
                     { text: "stimme teilweise zu", wert: 2 },
                     { text: "stimme zu", wert: 3 }
+                ]
+            },
+            {
+                id: 57,
+                text: "Wie schätzen Sie Ihre Kompetenzen im Bereich der BNE im Unterricht ein?",
+                bereich: "U: Kompetenzen",
+                ebene: "subjektiv",
+                typ: "slider",
+                antworten: [
+                    { text: "Keine Antwort", wert: 0 },
+                    { text: "wenig Kenntnisse", wert: 1 },
+                    { text: "mittlere Kompetenzen", wert: 2 },
+                    { text: "hohe Kompetenzen", wert: 3 }
+                ]
+            },
+            {
+                id: 58,
+                text: "Die Kompetenz zur integrierten Problemlösung (Schlüsselkompetenzen für BNE im Rahmen der Agenda 2030) beinhaltet die Fähigkeit die eigenen Werte, Wahrnehmungen und Handlungen zu reflektieren.",
+                bereich: "U: Kompetenzen",
+                ebene: "objektiv",
+                typ: "mc",
+                antworten: [
+                    { text: "Ja", wert: 1 }, 
+                    { text: "Nein", wert: 3 }, // korrekte Antwort
+                 
                 ]
             },
 
@@ -817,6 +832,30 @@
                     { text: "wenig interessiert", wert: 1 },
                     { text: "interessiert", wert: 2 },
                     { text: "sehr interessiert", wert: 3 }
+                ]
+            },
+            {
+                id: 65,
+                text: "Im Lehrplan 21 finden sich zusätzlich zu den fächerübergreifenden Themen bei den fachspezifischen Kompetenzen noch BNE-Verweise.",
+                bereich: "U: Themen",
+                ebene: "objektiv",
+                typ: "mc",
+                antworten: [
+                    { text: "Nein", wert: 1 },
+                    { text: "Ja", wert: 3 } // korrekte Antwort
+                ]
+            },
+            {
+                id: 66,
+                text: "Ich kann mir vorstellen auch weitere Themen interdisziplinär in meinen Fächern zu behandeln.",
+                bereich: "U: Themen",
+                ebene: "subjektiv",
+                typ: "slider",
+                antworten: [
+                    { text: "Keine Antwort", wert: 0 },
+                    { text: "Wenig interessiert", wert: 1 },
+                    { text: "Interessiert", wert: 2 },
+                    { text: "Sehr interessiert", wert: 3 }
                 ]
             },
 
@@ -870,6 +909,17 @@
                     { text: "sehr interessiert", wert: 3 }
                 ]
             },
+            {
+                id: 75,
+                text: "Das problembasierte Lernen ist eine Methode der Zukunftswerkstatt.",
+                bereich: "U: Methoden",
+                ebene: "objektiv",
+                typ: "mc",
+                antworten: [
+                    { text: "Ja", wert: 1 }, 
+                    { text: "Nein", wert: 3 }, // korrekte Antwort
+                ]
+            },
 
             // S: Schulentwicklung id 8x
             {
@@ -921,6 +971,7 @@
                     { text: "sehr interessiert", wert: 3 }
                 ]
             }
+    
         ];
 
         // =========================================================
