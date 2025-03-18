@@ -235,41 +235,6 @@
         .personal-data-label {
             font-weight: bold;
         }
-        .subjects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 10px;
-            margin-top: 10px;
-        }
-        .subject-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background-color: #f0f9ff;
-            padding: 10px 15px;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            user-select: none;
-            border: 1px solid #e2e8f0;
-        }
-        .subject-item:hover {
-            background-color: #dbeafe;
-            transform: translateY(-2px);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .subject-item.selected {
-            background-color: #2563eb;
-            color: white;
-            border: 1px solid #1e40af;
-            box-shadow: 0 2px 4px rgba(37, 99, 235, 0.3);
-        }
-        .subject-item input {
-            width: auto;
-            cursor: pointer;
-            position: absolute;
-            opacity: 0;
-        }
         .welcome-container {
             max-width: 800px;
             margin: 0 auto;
@@ -278,6 +243,11 @@
         .welcome-header {
             color: #2563eb;
             margin-bottom: 20px;
+            text-align: center;
+        }
+        .welcome-title {
+            color: #051b4b;
+            margin-bottom: 25px;
             text-align: center;
         }
         .welcome-card {
@@ -291,7 +261,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Standortbestimmung BNE</h1>
+        <h1 class="welcome-title">Standortbestimmung BNE</h1>
         <div class="progress-indicator" id="progressIndicator">
             <!-- Wird dynamisch gefüllt -->
         </div>
@@ -340,10 +310,8 @@
                 <input type="email" id="email" name="email">
             </div>
             <div class="form-group">
-                <label>Studienfächer (Mehrfachauswahl möglich)</label>
-                <div class="subjects-grid" id="subjects-container">
-                    <!-- Wird dynamisch durch JavaScript gefüllt -->
-                </div>
+                <label for="studienfach">Studienfächer</label>
+                <input type="text" id="studienfach" name="studienfach">
             </div>
             <div class="form-group">
                 <label for="lerngelegenheiten">Besuchte Lerngelegenheiten mit Querschnitt BNE</label>
@@ -497,9 +465,9 @@
                 typ: "slider",
                 antworten: [
                     { text: "Keine Antwort", wert: 0 },
-                    { text: "Trifft eher nicht zu", wert: 1 },
-                    { text: "Trifft eher zu", wert: 2 },
-                    { text: "Trifft zu", wert: 3 }
+                    { text: "trifft eher nicht zu", wert: 1 },
+                    { text: "trifft eher zu", wert: 2 },
+                    { text: "trifft zu", wert: 3 }
                 ]
             },
             {
@@ -569,9 +537,9 @@
                 ebene: "subjektiv",
                 typ: "slider",
                 antworten: [
-                    { text: "Trifft nicht zu", wert: 1 },
-                    { text: "Trifft eher zu", wert: 2 },
-                    { text: "Trifft zu", wert: 3 }
+                    { text: "trifft nicht zu", wert: 1 },
+                    { text: "trifft eher zu", wert: 2 },
+                    { text: "trifft zu", wert: 3 }
                 ]
             },
             {
@@ -581,9 +549,9 @@
                 ebene: "interesse",
                 typ: "slider",
                 antworten: [
-                    { text: "Trifft eher nicht zu", wert: 1 },
-                    { text: "Trifft eher zu", wert: 2 },
-                    { text: "Trifft sehr zu", wert: 3 }
+                    { text: "trifft eher nicht zu", wert: 1 },
+                    { text: "trifft eher zu", wert: 2 },
+                    { text: "trifft sehr zu", wert: 3 }
                 ]
             },
             {
@@ -593,8 +561,8 @@
                 ebene: "objektiv",
                 typ: "mc",
                 antworten: [
-                    { text: "Richtig", wert: 1 },
-                    { text: "Falsch", wert: 3 }, // korrekte Antwort
+                    { text: "richtig", wert: 1 },
+                    { text: "falsch", wert: 3 }, // korrekte Antwort
                     { text: "teilweise richtig", wert: 1 },
                 ]
             },
@@ -605,9 +573,9 @@
                 ebene: "subjektiv",
                 typ: "slider",
                 antworten: [
-                    { text: "Trifft nicht zu", wert: 1 },
-                    { text: "Trifft eher zu", wert: 2 },
-                    { text: "Trifft zu", wert: 3 }
+                    { text: "trifft nicht zu", wert: 1 },
+                    { text: "trifft eher zu", wert: 2 },
+                    { text: "trifft zu", wert: 3 }
                 ]
             },
             {
@@ -618,9 +586,9 @@
                 typ: "slider",
                 antworten: [
                     { text: "Keine Antwort", wert: 0 },
-                    { text: "Trifft nicht zu", wert: 1 },
-                    { text: "Trifft teilweise zu", wert: 2 },
-                    { text: "Trifft zu", wert: 3 }
+                    { text: "trifft nicht zu", wert: 1 },
+                    { text: "trifft teilweise zu", wert: 2 },
+                    { text: "trifft zu", wert: 3 }
                 ]
             },
 
@@ -645,8 +613,8 @@
                 ebene: "objektiv",
                 typ: "mc",
                 antworten: [
-                    { text: "Richtig", wert: 3 }, // korrekte Antwort
-                    { text: "Falsch", wert: 1 }, 
+                    { text: "richtig", wert: 3 }, // korrekte Antwort
+                    { text: "falsch", wert: 1 }, 
                    
                 ]
             },
@@ -657,8 +625,8 @@
                 ebene: "objektiv",
                 typ: "mc",
                 antworten: [
-                    { text: "Richtig", wert: 1 }, 
-                    { text: "Falsch", wert: 3 }, // korrekte Antwort
+                    { text: "richtig", wert: 1 }, 
+                    { text: "falsch", wert: 3 }, // korrekte Antwort
                    
                 ]
             },
@@ -683,9 +651,9 @@
                 typ: "slider",
                 antworten: [
                     { text: "Keine Antwort", wert: 0 },
-                    { text: "Stimme eher nicht zu", wert: 1 },
-                    { text: "Stimme teilweise zu", wert: 2 },
-                    { text: "Stimme zu", wert: 3 }
+                    { text: "stimme eher nicht zu", wert: 1 },
+                    { text: "stimme teilweise zu", wert: 2 },
+                    { text: "stimme zu", wert: 3 }
                 ]
             },
 
@@ -698,9 +666,9 @@
                 typ: "slider",
                 antworten: [
                     { text: "Keine Antwort", wert: 0 },
-                    { text: "Trifft nicht zu", wert: 1 },
-                    { text: "Trifft teilweise zu", wert: 2 },
-                    { text: "Trifft zu", wert: 3 }
+                    { text: "trifft nicht zu", wert: 1 },
+                    { text: "trifft teilweise zu", wert: 2 },
+                    { text: "trifft zu", wert: 3 }
                 ]
             },
             {
@@ -746,9 +714,9 @@
                 typ: "slider",
                 antworten: [
                     { text: "Keine Antwort", wert: 0 },
-                    { text: "Stimme eher nicht zu", wert: 1 },
-                    { text: "Stimme teilweise zu", wert: 2 },
-                    { text: "Stimme zu", wert: 3 }
+                    { text: "stimme eher nicht zu", wert: 1 },
+                    { text: "stimme teilweise zu", wert: 2 },
+                    { text: "stimme zu", wert: 3 }
                 ]
             },
 
@@ -798,9 +766,9 @@
                 typ: "slider",
                 antworten: [
                     { text: "Keine Antwort", wert: 0 },
-                    { text: "Wenig Kenntnisse", wert: 1 },
-                    { text: "Mittlere Kompetenzen", wert: 2 },
-                    { text: "Hohe Kompetenzen", wert: 3 }
+                    { text: "wenig Kenntnisse", wert: 1 },
+                    { text: "mittlere Kompetenzen", wert: 2 },
+                    { text: "hohe Kompetenzen", wert: 3 }
                 ]
             },
             {
@@ -823,9 +791,9 @@
                 typ: "slider",
                 antworten: [
                     { text: "Keine Antwort", wert: 0 },
-                    { text: "Stimme eher nicht zu", wert: 1 },
-                    { text: "Stimme teilweise zu", wert: 2 },
-                    { text: "Stimme zu", wert: 3 }
+                    { text: "stimme eher nicht zu", wert: 1 },
+                    { text: "stimme teilweise zu", wert: 2 },
+                    { text: "stimme zu", wert: 3 }
                 ]
             },
             {
@@ -836,9 +804,9 @@
                 typ: "slider",
                 antworten: [
                     { text: "Keine Antwort", wert: 0 },
-                    { text: "Wenig Kenntnisse", wert: 1 },
-                    { text: "Mittlere Kompetenzen", wert: 2 },
-                    { text: "Hohe Kompetenzen", wert: 3 }
+                    { text: "wenig Kenntnisse", wert: 1 },
+                    { text: "mittlere Kompetenzen", wert: 2 },
+                    { text: "hohe Kompetenzen", wert: 3 }
                 ]
             },
             {
@@ -898,9 +866,9 @@
                 typ: "slider",
                 antworten: [
                     { text: "Keine Antwort", wert: 0 },
-                    { text: "Wenig interessiert", wert: 1 },
-                    { text: "Interessiert", wert: 2 },
-                    { text: "Sehr interessiert", wert: 3 }
+                    { text: "wenig interessiert", wert: 1 },
+                    { text: "interessiert", wert: 2 },
+                    { text: "sehr interessiert", wert: 3 }
                 ]
             },
             {
@@ -973,9 +941,9 @@
                 typ: "slider",
                 antworten: [
                     { text: "Keine Antwort", wert: 0 },
-                    { text: "Wenig interessiert", wert: 1 },
-                    { text: "Interessiert", wert: 2 },
-                    { text: "Sehr interessiert", wert: 3 }
+                    { text: "wenig interessiert", wert: 1 },
+                    { text: "interessiert", wert: 2 },
+                    { text: "sehr interessiert", wert: 3 }
                 ]
             },
             {
@@ -1035,9 +1003,9 @@
                 typ: "slider",
                 antworten: [
                     { text: "Keine Antwort", wert: 0 },
-                    { text: "Wenig interessiert", wert: 1 },
-                    { text: "Interessiert", wert: 2 },
-                    { text: "Sehr interessiert", wert: 3 }
+                    { text: "wenig interessiert", wert: 1 },
+                    { text: "interessiert", wert: 2 },
+                    { text: "sehr interessiert", wert: 3 }
                 ]
             }
     
@@ -1052,25 +1020,6 @@
         let personalData = {};
         let currentPage = 0;
         let pages = [];
-        
-        // Liste der verfügbaren Studienfächer
-        const STUDIENFAECHER = [
-            "Deutsch",
-            "Mathematik",
-            "Französisch",
-            "Englisch",
-            "NMG (Natur, Mensch, Gesellschaft)",
-            "Geschichte",
-            "Geografie",
-            "Biologie",
-            "Chemie",
-            "Physik",
-            "Musik",
-            "Kunst/Gestalten",
-            "Sport",
-            "Informatik",
-            "WAH (Wirtschaft, Arbeit, Haushalt)"
-        ];
 
         // Seiten nach Bereichen erstellen
         function initPages() {
@@ -1204,18 +1153,12 @@
 
         // Sammeln der persönlichen Daten
         function collectPersonalData() {
-            // Sammle ausgewählte Studienfächer
-            const selectedSubjects = [];
-            document.querySelectorAll('#subjects-container input:checked').forEach(checkbox => {
-                selectedSubjects.push(checkbox.value);
-            });
-            
             personalData = {
                 vorname: document.getElementById('vorname').value,
                 nachname: document.getElementById('nachname').value,
                 matrikelnummer: document.getElementById('matrikelnummer').value,
                 email: document.getElementById('email').value,
-                studienfaecher: selectedSubjects,
+                studienfach: document.getElementById('studienfach').value,
                 lerngelegenheiten: document.getElementById('lerngelegenheiten').value
             };
         }
@@ -1237,23 +1180,13 @@
                 nachname: 'Nachname',
                 matrikelnummer: 'Matrikelnummer',
                 email: 'E-Mail',
-                studienfaecher: 'Studienfächer',
+                studienfach: 'Studienfächer',
                 lerngelegenheiten: 'Besuchte Lerngelegenheiten'
             };
             
             let html = '';
             for (const [key, value] of Object.entries(personalData)) {
-                // Spezialbehandlung für Studienfächer-Array
-                if (key === 'studienfaecher' && Array.isArray(value) && value.length > 0) {
-                    html += `
-                        <div class="personal-data-item">
-                            <span class="personal-data-label">${labels[key]}:</span> 
-                            ${value.join(', ')}
-                        </div>
-                    `;
-                }
-                // Normale Textfelder
-                else if (key !== 'studienfaecher' && value && (!Array.isArray(value) && value.trim !== undefined && value.trim() !== '')) {
+                if (value.trim() !== '') {
                     html += `
                         <div class="personal-data-item">
                             <span class="personal-data-label">${labels[key]}:</span> 
@@ -1424,7 +1357,7 @@ function renderResultsSummary() {
             ctx.stroke();
 
             // Beschriftungen
-            ctx.font = 'bold 30px Arial';
+            ctx.font = 'bold 50px Arial';
             ctx.fillStyle = '#000';
             
             BEREICHE.forEach((bereich, i) => {
@@ -1567,7 +1500,6 @@ function renderResultsSummary() {
             // Sammle persönliche Daten, wenn von Seite 1 (persönliche Daten) weiternavigiert wird
             if (currentPage === 1 && pageIndex > 1) {
                 collectPersonalData();
-                console.log("Gesammelte Daten:", personalData);
             }
             
             // Zeige neue Seite
@@ -1580,7 +1512,6 @@ function renderResultsSummary() {
             // Für die persönliche Daten-Seite
             else if (currentPage === 1) {
                 document.getElementById('page-0').classList.add('active');
-                renderSubjectsSelection(); // Sicherstellen, dass die Fächerauswahl gerendert wird
             } 
             // Für die Ergebnisseite
             else if (currentPage === pages.length + 1) {
@@ -1647,35 +1578,8 @@ function renderResultsSummary() {
         // Globale Funktion für Event-Handler
         window.handleAntwort = handleAntwort;
 
-        // Funktion zum Erstellen der Studienfächer-Auswahl
-        function renderSubjectsSelection() {
-            const container = document.getElementById('subjects-container');
-            if (!container) return;
-            
-            container.innerHTML = STUDIENFAECHER.map(fach => `
-                <label class="subject-item" id="subject-${fach.replace(/[^a-zA-Z0-9]/g, '')}">
-                    <input type="checkbox" name="studienfach" value="${fach}">
-                    ${fach}
-                </label>
-            `).join('');
-            
-            // Event-Listener für Styling der ausgewählten Fächer
-            container.querySelectorAll('.subject-item').forEach(item => {
-                item.addEventListener('click', function() {
-                    const checkbox = this.querySelector('input');
-                    checkbox.checked = !checkbox.checked;
-                    
-                    // Styling-Klasse toggle
-                    this.classList.toggle('selected', checkbox.checked);
-                });
-            });
-        }
-
         // Starte die Anwendung
         init();
-        
-        // Studienfächer-Auswahl rendern
-        renderSubjectsSelection();
     </script>
 </body>
 </html>
