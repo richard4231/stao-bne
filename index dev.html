@@ -349,10 +349,20 @@
         h1 {
             text-align: center;
         }
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1.2em;
+            }
+        }
         .welcome-header {
             color: #2563eb;
             margin-bottom: 20px;
             text-align: center;
+        }
+        @media (max-width: 600px) {
+            .welcome-header {
+                font-size: 1.2em;
+            }
         }
         .welcome-card {
             background-color: #f0f9ff;
@@ -369,41 +379,24 @@
             display: block;
             padding-bottom: 20px;
         }
+
         /* Container für den ersten Teil des Begrüssungstextes */
         .first-intro-container {
             position: relative;
-            overflow: hidden; /* Verhindert Überlauf des Bildes */
+            overflow: hidden;
+            line-height: 1.6; /* Verhindert Überlauf des Bildes */
         }
         
         /* Bild im Fliesstext der Begrüssungsseite */
         .welcome-image {
             float: left;
-            margin: 5px 20px 8px 5px; /* Abstand oben, rechts, unten, links */
-            width: 33%;
-            height: auto; /* Automatische Höhe basierend auf der Breite */
-            max-height: 100%; /* Nicht höher als Container */
+            margin: 20px 20px 8px 5px; /* Abstand oben, rechts, unten, links */
+            width: 25%;
             object-fit: contain; /* Behält Seitenverhältnis bei */
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
-        
-        /* Responsives Verhalten für verschiedene Bildschirmgrößen */
-        @media (max-width: 768px) {
-            .welcome-image {
-                width: 25%;
-                margin: 0 15px 10px 0;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .welcome-image {
-                float: none;
-                width: 100%;
-                max-width: 200px;
-                margin: 0 auto 15px;
-                display: block;
-            }
-        }
+
         .selection-counter {
             margin-top: 10px;
             font-weight: bold;
@@ -680,7 +673,7 @@
                         </div>
                         <div class="legend-item">
                             <svg width="30" height="15" viewBox="0 0 30 15">
-                                <path d="M15,2 L22,12 L8,12 Z" fill="rgba(22, 163, 74, 0.9)" stroke="rgba(22, 163, 74, 0.9)" stroke-width="2"/>
+                                <path d="M15,2 L20.7,12 L9.3,12 Z" fill="rgba(22, 163, 74, 0.9)" stroke="rgba(22, 163, 74, 0.9)" stroke-width="2"/>
                             </svg>
                             <span>Objektiv</span>
                         </div>
@@ -1917,8 +1910,8 @@
                     case 'triangle': // Dreieck für objektive Werte
                         ctx.beginPath();
                         ctx.moveTo(x, y - 8);
-                        ctx.lineTo(x + 8, y + 8);
-                        ctx.lineTo(x - 8, y + 8);
+                        ctx.lineTo(x + 9.2, y + 8);
+                        ctx.lineTo(x - 9.2, y + 8);
                         ctx.closePath();
                         ctx.fill();
                         ctx.stroke();
