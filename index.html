@@ -124,6 +124,7 @@
         
         /* Farbauswahl-Bereich für Radar-Chart */
         .color-picker-container {
+            margin-top: 20px;
             margin-bottom: 20px;
             padding: 10px 15px;
             background-color: #f8fafc;
@@ -135,7 +136,7 @@
             margin-top: 0;
             margin-bottom: 10px;
             color: #4b5563;
-            font-size: 16px;
+            font-size: 14px;
         }
         
         .color-picker-row {
@@ -149,7 +150,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            font-size: 14px;
+            font-size: 12px;
             cursor: pointer;
         }
         
@@ -645,24 +646,6 @@
                 
                 <!-- Radar Graph Container -->
                 <div class="radar-container">
-                    <div class="color-picker-container">
-                        <h4>Farbgestaltung anpassen:</h4>
-                        <div class="color-picker-row">
-                            <label>
-                                <input type="color" id="subjektiv-color" value="#2563eb" onchange="updateChartColors()">
-                                Subjektiv
-                            </label>
-                            <label>
-                                <input type="color" id="objektiv-color" value="#16a34a" onchange="updateChartColors()">
-                                Objektiv
-                            </label>
-                            <label>
-                                <input type="color" id="interesse-color" value="#dc2626" onchange="updateChartColors()">
-                                Interesse
-                            </label>
-                            <button class="reset-colors-btn" onclick="resetChartColors()">Standardfarben</button>
-                        </div>
-                    </div>
                     <canvas id="radarCanvas" width="1000" height="1000"></canvas>
                     <div class="legend">
                         <div class="legend-item">
@@ -682,6 +665,24 @@
                                 <rect x="9" y="1.5" width="12" height="12" fill="rgba(220, 38, 38, 0.9)" stroke="rgba(220, 38, 38, 0.9)" stroke-width="2"/>
                             </svg>
                             <span>Interesse</span>
+                        </div>
+                    </div>
+                    <div class="color-picker-container">
+                        <h4>Farbgestaltung anpassen:</h4>
+                        <div class="color-picker-row">
+                            <label>
+                                <input type="color" id="subjektiv-color" value="#2563eb" onchange="updateChartColors()">
+                                Subjektiv
+                            </label>
+                            <label>
+                                <input type="color" id="objektiv-color" value="#16a34a" onchange="updateChartColors()">
+                                Objektiv
+                            </label>
+                            <label>
+                                <input type="color" id="interesse-color" value="#dc2626" onchange="updateChartColors()">
+                                Interesse
+                            </label>
+                            <button class="reset-colors-btn" onclick="resetChartColors()">Standardfarben</button>
                         </div>
                     </div>
                 </div>
