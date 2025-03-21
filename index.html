@@ -653,7 +653,7 @@
                         </div>
                         <div class="legend-item">
                             <svg width="30" height="15" viewBox="0 0 30 15">
-                                <path d="M15,2 L20.7,12 L9.3,12 Z" fill="rgba(22, 163, 74, 0.9)" stroke="rgba(22, 163, 74, 0.9)" stroke-width="2"/>
+                                <path d="M15,2 L21.9,14 L8.1,14 Z" fill="rgba(256, 256, 256, 0.9)" stroke="rgba(22, 163, 74, 0.9)" stroke-width="2"/>
                             </svg>
                             <span>Objektiv</span>
                         </div>
@@ -1905,7 +1905,7 @@
                     case 'circle': // Kreis für subjektive Werte
                         ctx.beginPath();
                         ctx.arc(x, y, 8, 0, 2 * Math.PI);
-                        ctx.fill();
+                        //ctx.fill();
                         ctx.stroke();
                         break;
                     case 'triangle': // Dreieck für objektive Werte
@@ -1914,13 +1914,13 @@
                         ctx.lineTo(x + 9.2, y + 8);
                         ctx.lineTo(x - 9.2, y + 8);
                         ctx.closePath();
-                        ctx.fill();
+                        //ctx.fill();
                         ctx.stroke();
                         break;
                     case 'square': // Quadrat für Interesse-Werte
                         ctx.beginPath();
                         ctx.rect(x - 6, y - 6, 12, 12);
-                        ctx.fill();
+                        //ctx.fill();
                         ctx.stroke();
                         break;
                 }
@@ -2078,21 +2078,21 @@
                 // Subjektiv (Kreis)
                 const subjektivSVG = legendItems[0].querySelector('circle');
                 if (subjektivSVG) {
-                    subjektivSVG.setAttribute('fill', subjektivColor);
+                    subjektivSVG.setAttribute('fill', '#fff'); //anstatt subjektivColor
                     subjektivSVG.setAttribute('stroke', subjektivColor);
                 }
                 
                 // Objektiv (Dreieck)
                 const objektivSVG = legendItems[1].querySelector('path');
                 if (objektivSVG) {
-                    objektivSVG.setAttribute('fill', objektivColor);
+                    objektivSVG.setAttribute('fill', '#fff');
                     objektivSVG.setAttribute('stroke', objektivColor);
                 }
                 
                 // Interesse (Rechteck)
                 const interesseSVG = legendItems[2].querySelector('rect');
                 if (interesseSVG) {
-                    interesseSVG.setAttribute('fill', interesseColor);
+                    interesseSVG.setAttribute('fill', '#fff');
                     interesseSVG.setAttribute('stroke', interesseColor);
                 }
             }
