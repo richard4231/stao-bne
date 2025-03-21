@@ -2267,6 +2267,7 @@
         document.getElementById('nextButton').addEventListener('click', () => {
             if (currentPage < pages.length + 1) {
                 goToPage(currentPage + 1);
+                window.scrollTo(0,0);
             } else {
                 // Formular abschliessen und Druck-Dialog öffnen
                 window.print();
