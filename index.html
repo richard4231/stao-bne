@@ -38,7 +38,7 @@
             gap: 15px;
          }
 
-        @media (max-width: 600px) {
+        @media (max-width: 430px) {
             .results-columns {
                 grid-template-columns: 1fr;
             }
@@ -688,10 +688,13 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="navigation">
             <button id="prevButton" class="nav-button">Zurück</button>
             <button id="nextButton" class="nav-button">Weiter</button>
+        </div>
+        <div class="progress-indicator" id="progressIndicator">
+            <!-- Wird dynamisch gefüllt -->
         </div>
     </div>
 
@@ -1740,7 +1743,7 @@
                 
                 // HTML für einen Bereich generieren
                 return `
-                    <div style="margin-bottom: 10px;">
+                    <div style="margin-bottom: 10px; font-size: 0.8em;">
                         <strong>${bereich}</strong>
                         <ul style="margin-top: 5px;">
                             <li>Subjektiv: ${ebenenWerte[0]}</li>
@@ -2141,202 +2144,186 @@
             return [text, ""];
         }
 
-        // Seiten-Navigation: Wechsel zwischen den verschiedenen Fragebogenseiten
-        function goToPage(pageIndex) {
-            // Verstecke aktuelle Seite
-            const activePage = document.querySelector('.page.active');
-            if (activePage) {
-            // Überblendeffekt starten
-            activePage.style.opacity = '0';
-            
-            // Warten, bis der Überblendeffekt abgeschlossen ist
-            setTimeout(() => {
-                activePage.classList.remove('active');
-                
-                // Aktuelle Seite aktualisieren
-                currentPage = pageIndex;
-                
-                // Navigation-Abstand anpassen
-                const navigationElement = document.querySelector('.navigation');
-                if (navigationElement) {
-                    navigationElement.style.marginTop = currentPage === 1 ? '300px' : '20px';
-                }
-                
-                // Zeige entsprechende Seite und aktiviere den Überblendeffekt
-                updateActivePage(pageIndex);
-                
-                // Sanft zum Seitenanfang scrollen
-                window.scrollTo({
-                    top: 0,
-                    left: 0,
-                    behavior: 'smooth'
-                });
-                
-                // Buttons und Fortschrittsanzeige aktualisieren
-                document.getElementById('prevButton').disabled = currentPage === 0;
-                document.getElementById('nextButton').textContent = currentPage === pages.length + 1 ? 'Abschliessen' : 'Weiter';
-                updateProgressIndicator();
-            }, 300); // Verzögerung = Überblendzeit
-            } else {
-                updateActivePage(pageIndex);
-            }
-            
-            // Sammle persönliche Daten, wenn von Seite 1 (persönliche Daten) weiternavigiert wird
-            if (currentPage === 1 && pageIndex > 1) {
-                collectPersonalData();
-            }
-            
-            // Aktuelle Seite aktualisieren
-            currentPage = pageIndex;
-            
-            // Navigation-Abstand anpassen (mehr Platz auf der persönlichen Daten-Seite)
-            const navigationElement = document.querySelector('.navigation');
-            if (navigationElement) {
-                navigationElement.style.marginTop = currentPage === 1 ? '300px' : '20px';
-            }
-            
-            // Zeige entsprechende Seite basierend auf dem Index
-            if (currentPage === 0) {
-                // Für die Startseite
-                document.getElementById('page-start').classList.add('active');
-            }
-            else if (currentPage === 1) {
-                // Für die persönliche Daten-Seite
-                document.getElementById('page-0').classList.add('active');
-                renderSubjectsSelection(); // Sicherstellen, dass die Fächerauswahl aktuell ist
-                
-                // Lerngelegenheiten-Liste initialisieren
-                const container = document.getElementById('lerngelegenheiten-list');
-                if (container) {
-                    // Alle verfügbaren Lerngelegenheiten anzeigen
-                    container.innerHTML = LERNGELEGENHEITEN.map(lg => `
-                        <div class="dropdown-option ${selectedLerngelegenheiten.includes(lg.id) ? 'selected' : ''}" 
-                             data-id="${lg.id}" 
-                             onclick="handleLerngelegenheitSelection('${lg.id}')">
-                            <div class="dropdown-option-content">
-                                <div class="dropdown-option-title">${lg.titel}</div>
-                                <div class="dropdown-option-info">
-                                    <span class="option-category">${lg.kategorie}</span>
-                                    <span class="option-semester">${lg.semester}</span>
-                                </div>
-                            </div>
-                        </div>
-                    `).join('');
-                    
-                    // Suchfunktion für Lerngelegenheiten einrichten
-                    const searchInput = document.getElementById('lerngelegenheiten-search');
-                    if (searchInput) {
-                        searchInput.addEventListener('input', function() {
-                            const searchTerm = this.value.toLowerCase();
-                            const options = document.querySelectorAll('#lerngelegenheiten-list .dropdown-option');
-                            let hasResults = false;
-                            
-                            // Filtere die Optionen basierend auf dem Suchbegriff
-                            options.forEach(option => {
-                                const text = option.textContent.toLowerCase();
-                                if (text.includes(searchTerm)) {
-                                    option.style.display = 'block';
-                                    hasResults = true;
-                                } else {
-                                    option.style.display = 'none';
-                                }
-                            });
-                            
-                            // "Keine Ergebnisse" Hinweis anzeigen, wenn nötig
-                            const noResultsElement = document.getElementById('no-results');
-                            if (!hasResults) {
-                                if (!noResultsElement) {
-                                    const noResults = document.createElement('div');
-                                    noResults.id = 'no-results';
-                                    noResults.className = 'no-results';
-                                    noResults.textContent = 'Keine Ergebnisse gefunden';
-                                    document.getElementById('lerngelegenheiten-list').appendChild(noResults);
-                                }
-                            } else if (noResultsElement) {
-                                noResultsElement.remove();
-                            }
-                        });
-                    }
-                    
-                    // Bereits ausgewählte Optionen anzeigen
-                    updateSelectedLerngelegenheitenDisplay();
-                }
-            } 
-            else if (currentPage === pages.length + 1) {
-                // Für die Ergebnisseite
-                renderPersonalData();
-                renderResultsSummary();
-                document.getElementById('page-final').classList.add('active');
-                
-                // Verzögerung zum Zeichnen des Radar-Diagramms
-                // Gibt dem Browser Zeit, die Seite zu rendern, bevor das Diagramm gezeichnet wird
-                setTimeout(() => {
-                    try {
-                        drawRadar();
-                    } catch (e) {
-                        console.error("Fehler beim Zeichnen des Radar-Charts:", e);
-                    }
-                }, 100);
-            } 
-            else {
-                // Für die Frageseiten
-                renderFragen();
-                document.getElementById(pages[currentPage - 2]).classList.add('active');
-            }
-            
-            // Navigation-Buttons aktualisieren
-            document.getElementById('prevButton').disabled = currentPage === 0;
-            document.getElementById('nextButton').textContent = currentPage === pages.length + 1 ? 'Abschliessen' : 'Weiter';
-            
-            // Fortschrittsanzeige aktualisieren
-            updateProgressIndicator();
-        }
-
-// Hilfsfunktion, um die aktive Seite zu aktualisieren
-function updateActivePage(pageIndex) {
-    // Sammle persönliche Daten, wenn von Seite 1 weiternavigiert wird
+// Hauptfunktion für den Seitenwechsel
+function goToPage(pageIndex) {
+    // Verstecke aktuelle Seite
+    const activePage = document.querySelector('.page.active');
+    
+    // Sammle persönliche Daten, wenn wir von Persönliche Daten-Seite weitergehen
     if (currentPage === 1 && pageIndex > 1) {
         collectPersonalData();
     }
     
-    // Zeige entsprechende Seite basierend auf dem Index
-    let newActivePage;
+    if (activePage) {
+        // Überblendeffekt starten
+        activePage.style.opacity = '0';
+        
+        // Warten, bis der Überblendeffekt abgeschlossen ist
+        setTimeout(() => {
+            activePage.classList.remove('active');
+            
+            // Aktuelle Seite aktualisieren und neue Seite anzeigen
+            currentPage = pageIndex;
+            activateAndInitializePage(pageIndex);
+            
+            // UI-Elemente aktualisieren
+            updateUIElements();
+            
+            // Nach oben scrollen
+            window.scrollTo({
+                top: 0,
+                left: 0,
+                behavior: 'smooth'
+            });
+        }, 300); // Verzögerung = Überblendzeit
+    } else {
+        // Direkter Wechsel ohne Überblendung
+        currentPage = pageIndex;
+        activateAndInitializePage(pageIndex);
+        updateUIElements();
+    }
+}
+
+// Aktivieren und Initialisieren der neuen Seite
+function activateAndInitializePage(pageIndex) {
+    let newActivePage = null;
+    
+    // Seite basierend auf dem Index ermitteln und initialisieren
     if (pageIndex === 0) {
         newActivePage = document.getElementById('page-start');
     }
     else if (pageIndex === 1) {
         newActivePage = document.getElementById('page-0');
-        renderSubjectsSelection();
-        // Lerngelegenheiten-Initialisierung...
+        initializePersonalDataPage();
     } 
     else if (pageIndex === pages.length + 1) {
-        renderPersonalData();
-        renderResultsSummary();
         newActivePage = document.getElementById('page-final');
-        
-        // Verzögerung für Radar-Chart
-        setTimeout(() => {
-            try {
-                drawRadar();
-            } catch (e) {
-                console.error("Fehler beim Zeichnen des Radar-Charts:", e);
-            }
-        }, 100);
+        initializeResultsPage();
     } 
     else {
-        renderFragen();
         newActivePage = document.getElementById(pages[pageIndex - 2]);
+        renderFragen();
     }
     
+    // Seite aktivieren und Einblendeffekt starten
     if (newActivePage) {
         newActivePage.classList.add('active');
-        // Anfangs transparent, dann einblenden
         newActivePage.style.opacity = '0';
         setTimeout(() => {
             newActivePage.style.opacity = '1';
         }, 50);
     }
 }
+
+// UI-Elemente aktualisieren (Navigation, Buttons, Fortschritt)
+function updateUIElements() {
+    // Navigation-Abstand anpassen
+    const navigationElement = document.querySelector('.navigation');
+    if (navigationElement) {
+        navigationElement.style.marginTop = currentPage === 1 ? '300px' : '20px';
+    }
+    
+    // Navigation-Buttons aktualisieren
+    document.getElementById('prevButton').disabled = currentPage === 0;
+    document.getElementById('nextButton').textContent = 
+        currentPage === pages.length + 1 ? 'Abschliessen' : 'Weiter';
+    
+    // Fortschrittsanzeige aktualisieren
+    updateProgressIndicator();
+}
+
+// Initialisierung der persönlichen Daten-Seite
+function initializePersonalDataPage() {
+    renderSubjectsSelection();
+    
+    // Lerngelegenheiten-Liste initialisieren
+    const container = document.getElementById('lerngelegenheiten-list');
+    if (container) {
+        // Alle verfügbaren Lerngelegenheiten anzeigen
+        container.innerHTML = LERNGELEGENHEITEN.map(lg => `
+            <div class="dropdown-option ${selectedLerngelegenheiten.includes(lg.id) ? 'selected' : ''}" 
+                 data-id="${lg.id}" 
+                 onclick="handleLerngelegenheitSelection('${lg.id}')">
+                <div class="dropdown-option-content">
+                    <div class="dropdown-option-title">${lg.titel}</div>
+                    <div class="dropdown-option-info">
+                        <span class="option-category">${lg.kategorie}</span>
+                        <span class="option-semester">${lg.semester}</span>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+        
+        // Suchfunktion für Lerngelegenheiten einrichten
+        const searchInput = document.getElementById('lerngelegenheiten-search');
+        if (searchInput) {
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                const options = document.querySelectorAll('#lerngelegenheiten-list .dropdown-option');
+                let hasResults = false;
+                
+                options.forEach(option => {
+                    const text = option.textContent.toLowerCase();
+                    if (text.includes(searchTerm)) {
+                        option.style.display = 'block';
+                        hasResults = true;
+                    } else {
+                        option.style.display = 'none';
+                    }
+                });
+                
+                // "Keine Ergebnisse" Hinweis
+                const noResultsElement = document.getElementById('no-results');
+                if (!hasResults) {
+                    if (!noResultsElement) {
+                        const noResults = document.createElement('div');
+                        noResults.id = 'no-results';
+                        noResults.className = 'no-results';
+                        noResults.textContent = 'Keine Ergebnisse gefunden';
+                        document.getElementById('lerngelegenheiten-list').appendChild(noResults);
+                    }
+                } else if (noResultsElement) {
+                    noResultsElement.remove();
+                }
+            });
+        }
+        
+        // Bereits ausgewählte Optionen anzeigen
+        updateSelectedLerngelegenheitenDisplay();
+    }
+}
+
+// Initialisierung der Ergebnisseite
+function initializeResultsPage() {
+    renderPersonalData();
+    renderResultsSummary();
+    
+    // Verzögerung zum Zeichnen des Radar-Diagramms
+    setTimeout(() => {
+        try {
+            drawRadar();
+        } catch (e) {
+            console.error("Fehler beim Zeichnen des Radar-Charts:", e);
+        }
+    }, 100);
+}
+
+// Event-Listener für Navigation-Buttons
+document.getElementById('prevButton').addEventListener('click', () => {
+    if (currentPage > 0) {
+        goToPage(currentPage - 1);
+    }
+});
+
+document.getElementById('nextButton').addEventListener('click', () => {
+    if (currentPage < pages.length + 1) {
+        goToPage(currentPage + 1);
+        // Nach oben scrollen (bereits in goToPage integriert)
+    } else {
+        // Formular abschliessen und Druck-Dialog öffnen
+        window.print();
+    }
+});
 
 
         // Event-Listener für Navigation-Buttons
