@@ -1727,7 +1727,7 @@
             // Ergebnisse für jeden Bereich berechnen
             const bereichErgebnisse = BEREICHE.map(bereich => {
                 const bereichFragen = FRAGEN.filter(frage => frage.bereich === bereich);
-                const ebenen = ['objektiv', 'subjektiv', 'interesse'];
+                const ebenen = ['subjektiv', 'objektiv', 'interesse'];
                 
                 // Für jede Ebene Durchschnittswerte berechnen
                 const ebenenWerte = ebenen.map(ebene => {
@@ -1745,8 +1745,8 @@
                     <div style="margin-bottom: 10px; font-size: 0.8em;">
                         <strong>${bereich}</strong>
                         <ul style="margin-top: 5px;">
-                            <li>Objektiv: ${ebenenWerte[0]}</li>
-                            <li>Subjektiv: ${ebenenWerte[1]}</li>
+                            <li>Subjektiv: ${ebenenWerte[0]}</li>
+                            <li>Objektiv: ${ebenenWerte[1]}</li>
                             <li>Interesse: ${ebenenWerte[2]}</li>
                         </ul>
                     </div>
@@ -1873,8 +1873,8 @@
             const ctx = setupCanvas(canvas);
 
             // Aktuelle Farbeinstellungen auslesen
-            const objektivColor = document.getElementById('objektiv-color').value;
             const subjektivColor = document.getElementById('subjektiv-color').value;
+            const objektivColor = document.getElementById('objektiv-color').value;
             const interesseColor = document.getElementById('interesse-color').value;
             
             // Alpha-Werte für Füllfarben erstellen (20% Deckkraft)
@@ -2001,8 +2001,8 @@
             // Daten aggregieren und normalisieren
             const aggregierteWerte = BEREICHE.reduce((acc, bereich) => {
                 acc[bereich] = {
-                    objektiv: [],
                     subjektiv: [],
+                    objektiv: [],
                     interesse: []
                 };
                 return acc;
@@ -2019,15 +2019,15 @@
             // Berechne Durchschnittswerte für jede Kategorie
             const chartData = BEREICHE.map(bereich => ({
                 bereich,
-                objektiv: durchschnitt(aggregierteWerte[bereich].objektiv),
                 subjektiv: durchschnitt(aggregierteWerte[bereich].subjektiv),
+                objektiv: durchschnitt(aggregierteWerte[bereich].objektiv),
                 interesse: durchschnitt(aggregierteWerte[bereich].interesse)
             }));
 
             // Definition der Ebenen mit ihren Eigenschaften und den ausgewählten Farben
             const ebenen = [
-                { name: 'objektiv', farbe: [getTransparentColor(objektivColor), objektivColor], marker: 'triangle' },
                 { name: 'subjektiv', farbe: [getTransparentColor(subjektivColor), subjektivColor], marker: 'circle' },
+                { name: 'objektiv', farbe: [getTransparentColor(objektivColor), objektivColor], marker: 'triangle' },
                 { name: 'interesse', farbe: [getTransparentColor(interesseColor), interesseColor], marker: 'square' }
             ];
 
@@ -2111,8 +2111,8 @@
         // Funktion zum Zurücksetzen der Farben auf die Standardwerte
         function resetChartColors() {
             // Standard-Farben setzen
-            document.getElementById('objektiv-color').value = '#16a34a';
             document.getElementById('subjektiv-color').value = '#2563eb';
+            document.getElementById('objektiv-color').value = '#16a34a';
             document.getElementById('interesse-color').value = '#dc2626';
             
             // Chart neu zeichnen
