@@ -207,12 +207,9 @@
         
         /* Seiten-Navigation */
         .page {
-            opacity: 0;
-            transition: opacity 0.3s ease-in-out;
             display: none;
         }
         .page.active {
-            opacity: 1;
             display: block;
         }
         .navigation {
@@ -2147,39 +2144,7 @@
             // Verstecke aktuelle Seite
             const activePage = document.querySelector('.page.active');
             if (activePage) {
-            // Überblendeffekt starten
-            activePage.style.opacity = '0';
-            
-            // Warten, bis der Überblendeffekt abgeschlossen ist
-            setTimeout(() => {
                 activePage.classList.remove('active');
-                
-                // Aktuelle Seite aktualisieren
-                currentPage = pageIndex;
-                
-                // Navigation-Abstand anpassen
-                const navigationElement = document.querySelector('.navigation');
-                if (navigationElement) {
-                    navigationElement.style.marginTop = currentPage === 1 ? '300px' : '20px';
-                }
-                
-                // Zeige entsprechende Seite und aktiviere den Überblendeffekt
-                updateActivePage(pageIndex);
-                
-                // Sanft zum Seitenanfang scrollen
-                window.scrollTo({
-                    top: 0,
-                    left: 0,
-                    behavior: 'smooth'
-                });
-                
-                // Buttons und Fortschrittsanzeige aktualisieren
-                document.getElementById('prevButton').disabled = currentPage === 0;
-                document.getElementById('nextButton').textContent = currentPage === pages.length + 1 ? 'Abschliessen' : 'Weiter';
-                updateProgressIndicator();
-            }, 300); // Verzögerung = Überblendzeit
-            } else {
-                updateActivePage(pageIndex);
             }
             
             // Sammle persönliche Daten, wenn von Seite 1 (persönliche Daten) weiternavigiert wird
@@ -2292,53 +2257,6 @@
             // Fortschrittsanzeige aktualisieren
             updateProgressIndicator();
         }
-
-// Hilfsfunktion, um die aktive Seite zu aktualisieren
-function updateActivePage(pageIndex) {
-    // Sammle persönliche Daten, wenn von Seite 1 weiternavigiert wird
-    if (currentPage === 1 && pageIndex > 1) {
-        collectPersonalData();
-    }
-    
-    // Zeige entsprechende Seite basierend auf dem Index
-    let newActivePage;
-    if (pageIndex === 0) {
-        newActivePage = document.getElementById('page-start');
-    }
-    else if (pageIndex === 1) {
-        newActivePage = document.getElementById('page-0');
-        renderSubjectsSelection();
-        // Lerngelegenheiten-Initialisierung...
-    } 
-    else if (pageIndex === pages.length + 1) {
-        renderPersonalData();
-        renderResultsSummary();
-        newActivePage = document.getElementById('page-final');
-        
-        // Verzögerung für Radar-Chart
-        setTimeout(() => {
-            try {
-                drawRadar();
-            } catch (e) {
-                console.error("Fehler beim Zeichnen des Radar-Charts:", e);
-            }
-        }, 100);
-    } 
-    else {
-        renderFragen();
-        newActivePage = document.getElementById(pages[pageIndex - 2]);
-    }
-    
-    if (newActivePage) {
-        newActivePage.classList.add('active');
-        // Anfangs transparent, dann einblenden
-        newActivePage.style.opacity = '0';
-        setTimeout(() => {
-            newActivePage.style.opacity = '1';
-        }, 50);
-    }
-}
-
 
         // Event-Listener für Navigation-Buttons
         document.getElementById('prevButton').addEventListener('click', () => {
