@@ -1899,7 +1899,7 @@
             function drawMarker(x, y, type, color) {
                 ctx.fillStyle = color;
                 ctx.strokeStyle = color;
-                ctx.lineWidth = 2;
+                ctx.lineWidth = 4;
                 
                 switch(type) {
                     case 'circle': // Kreis für subjektive Werte
@@ -2267,7 +2267,12 @@
         document.getElementById('nextButton').addEventListener('click', () => {
             if (currentPage < pages.length + 1) {
                 goToPage(currentPage + 1);
-                window.scrollTo(0,0);
+                // Ändere diesen Code im nextButton Event-Listener
+                window.scrollTo({
+                    top: 0,
+                    left: 0,
+                    behavior: 'smooth'
+                });
             } else {
                 // Formular abschliessen und Druck-Dialog öffnen
                 window.print();
