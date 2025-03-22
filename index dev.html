@@ -1,0 +1,2304 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kompetenzradar BNE</title>
+    <style>
+        /* Grundlegende Seitengestaltung */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f3f4f6;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        /* Grid-Layout für verschiedene Seitenelemente */
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+        @media (min-width: 1500px) { /* Bei grossen Bildschirmen mehr Platz für Radar Chart */
+            .results-grid {
+                grid-template-columns: 1fr 2fr; 
+            }
+        }
+        .results-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+         }
+
+        @media (max-width: 600px) {
+            .results-columns {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Gestaltung der Frageelemente */
+        .question-card {
+            border: 1px solid #e5e7eb;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+        }
+        .question-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .meta-info {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        /* Multiple-Choice Gestaltung */
+        .mc-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .mc-option {
+            display: flex;
+            align-item: center;
+            gap: 8px;
+            padding: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .mc-option:hover {
+            background-color: #f3f4f6;
+        }
+        
+        /* Slider-Gestaltung */
+        .slider-container {
+            padding: 20px 10px;
+            position: relative;
+        }
+        .slider {
+            width: 100%;
+            height: 5px;
+            background: #ddd;
+            outline: none;
+            -webkit-appearance: none;
+            border-radius: 5px;
+        }
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #2563eb;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        .slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: #2563eb;
+            border-radius: 50%;
+            cursor: pointer;
+            border: none;
+        }
+        .slider-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            font-size: 0.8em;
+            color: #666;
+        }
+        .slider-value {
+            text-align: center;
+            margin-top: 10px;
+            font-weight: bold;
+            color: #2563eb;
+        }
+        
+        /* Farbauswahl-Bereich für Radar-Chart */
+        .color-picker-container {
+            margin-bottom: 20px;
+            padding: 10px 15px;
+            background-color: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .color-picker-container h4 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            color: #4b5563;
+            font-size: 16px;
+        }
+        
+        .color-picker-row {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .color-picker-row label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        
+        .color-picker-row input[type="color"] {
+            width: 30px;
+            height: 30px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .reset-colors-btn {
+            padding: 6px 12px;
+            background-color: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+            color: #475569;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .reset-colors-btn:hover {
+            background-color: #e2e8f0;
+        }
+        #radarCanvas {
+            width: 100%;
+            max-width: 1000px;
+            height: auto;
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: crisp-edges;
+            -ms-interpolation-mode: nearest-neighbor;
+            margin: 0 auto;
+            display: block;
+        }
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 16px;
+        }
+        .legend-item {
+            display: flex;
+            align-item: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .legend-color {
+            width: 20px;
+            height: 10px;
+            border-radius: 2px;
+        }
+        
+        /* Seiten-Navigation */
+        .page {
+            display: none;
+        }
+        .page.active {
+            display: block;
+        }
+        .navigation {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
+            transition: margin-top 0.3s ease; /* Sanfte Übergangsanimation */
+        }
+        .nav-button {
+            padding: 10px 20px;
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .nav-button:disabled {
+            background-color: #a0aec0;
+            cursor: not-allowed;
+        }
+        
+        /* Fortschrittsanzeige */
+        .progress-indicator {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .progress-dot {
+            height: 10px;
+            width: 10px;
+            background-color: #cbd5e0;
+            border-radius: 50%;
+            margin: 0 5px;
+        }
+        .progress-dot.active {
+            background-color: #2563eb;
+        }
+        
+        /* Formularelemente */
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        
+        /* Textformatierungen */
+        .intro-text {
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        
+        /* Zusammenfassungsbereiche */
+        .summary-section {
+            margin-bottom: 30px;
+            padding: 15px;
+            background-color: #f8fafc;
+            border-radius: 6px;
+        }
+        .summary-section h3 {
+            margin-top: 0;
+            color: #2563eb;
+        }
+        .personal-data-section {
+            margin-bottom: 30px;
+            padding: 15px;
+            background-color: #f0f9ff;
+            border-radius: 6px;
+        }
+        .personal-data-section h3 {
+            margin-top: 0;
+            color: #0369a1;
+        }
+        .personal-data-item {
+            margin-bottom: 8px;
+        }
+        .personal-data-label {
+            font-weight: bold;
+        }
+        
+        /* Fächerauswahl */
+        .subjects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .subject-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f0f9ff;
+            padding: 10px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            user-select: none;
+            border: 1px solid #e2e8f0;
+            text-align: center;
+        }
+        .subject-item:hover {
+            background-color: #dbeafe;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .subject-item.selected {
+            background-color: #2563eb;
+            color: white;
+            border: 1px solid #1e40af;
+            box-shadow: 0 2px 4px rgba(37, 99, 235, 0.3);
+        }
+        .subject-item.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        /* Willkommensseite */
+        .welcome-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1.2em;
+            }
+        }
+        .welcome-header {
+            color: #2563eb;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        @media (max-width: 600px) {
+            .welcome-header {
+                font-size: 1.2em;
+            }
+        }
+        .welcome-card {
+            background-color: #f0f9ff;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+        .sdg-image {
+            max-width: 100%;
+            max-height: 400px;
+            height: auto;
+            margin: auto;
+            display: block;
+            padding-bottom: 20px;
+        }
+
+        /* Container für den ersten Teil des Begrüssungstextes */
+        .first-intro-container {
+            position: relative;
+            overflow: hidden;
+            line-height: 1.6; /* Verhindert Überlauf des Bildes */
+        }
+        
+        /* Bild im Fliesstext der Begrüssungsseite */
+        .welcome-image {
+            float: left;
+            margin: 20px 20px 8px 5px; /* Abstand oben, rechts, unten, links */
+            width: 25%;
+            object-fit: contain; /* Behält Seitenverhältnis bei */
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .selection-counter {
+            margin-top: 10px;
+            font-weight: bold;
+            color: #2563eb;
+        }
+        
+        /* Dropdown für Lerngelegenheiten */
+        .custom-dropdown {
+            position: relative;
+            width: 100%;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            background-color: white;
+        }
+        .selected-options {
+            padding: 10px;
+            cursor: pointer;
+            min-height: 24px;
+            border-radius: 4px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+        .selected-options .placeholder {
+            color: #a0aec0;
+        }
+        .selected-options:hover {
+            background-color: #f8fafc;
+        }
+        .selected-tag {
+            display: inline-flex;
+            align-items: center;
+            background-color: #e2e8f0;
+            border-radius: 4px;
+            padding: 2px 8px;
+            margin-right: 2px;
+            margin-bottom: 2px;
+            font-size: 0.9em;
+        }
+        .remove-tag {
+            margin-left: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            color: #718096;
+        }
+        .remove-tag:hover {
+            color: #e53e3e;
+        }
+        .dropdown-options {
+            position: absolute;
+            width: 100%;
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #e2e8f0;
+            border-top: none;
+            border-radius: 0 0 4px 4px;
+            background-color: white;
+            z-index: 10;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            /* Dropdown standardmässig ausblenden */
+            display: none;
+        }
+        .dropdown-option {
+            padding: 10px;
+            cursor: pointer;
+            border-bottom: 1px solid #f7fafc;
+            display: block;
+            transition: all 0.2s ease;
+        }
+        .dropdown-option:hover {
+            background-color: #f3f4f6;
+        }
+        .dropdown-option.selected {
+            background-color: #e6f2ff;
+            border-left: 3px solid #2563eb;
+        }
+        .dropdown-option-content {
+            display: flex;
+            flex-direction: column;
+        }
+        .dropdown-option-title {
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+        .dropdown-option-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85em;
+        }
+        .search-container {
+            padding: 10px;
+            border-bottom: 1px solid #e2e8f0;
+            position: sticky;
+            top: 0;
+            background-color: white;
+            z-index: 11;
+        }
+        .dropdown-search {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            font-size: 0.95em;
+        }
+        .option-category {
+            font-size: 0.85em;
+            color: #4a5568;
+            display: block;
+            margin-top: 2px;
+        }
+        .option-semester {
+            font-size: 0.8em;
+            color: #718096;
+            display: inline-block;
+            margin-top: 2px;
+            background-color: #f0f9ff;
+            padding: 1px 6px;
+            border-radius: 4px;
+        }
+        .lerngelegenheiten-list {
+            margin: 5px 0 0 20px;
+            padding: 0;
+        }
+        .lerngelegenheiten-list li {
+            margin-bottom: 5px;
+        }
+        .no-results {
+            padding: 15px;
+            color: #718096;
+            text-align: center;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Standortbestimmung QT BNE</h1>
+        <div class="progress-indicator" id="progressIndicator">
+            <!-- Wird dynamisch gefüllt -->
+        </div>
+        
+        <!-- Startseite -->
+        <div class="page" id="page-start">
+            <div class="welcome-container">
+                <h2 class="welcome-header">Willkommen zur Standortbestimmung des Querschnittsthemas Bildung für nachhaltige Entwicklung</h2>
+                
+                <div class="welcome-card">
+                    <div class="first-intro-container">
+                        <img src="data:image/png;base64,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" alt="BNE Logo" class="welcome-image">
+                        <p>Herzlich willkommen zur Standortbestimmung des Querschnittsthemas (QT) Bildung für nachhaltige Entwicklung (BNE).</p>
+                        <p>Auf den folgenden Seiten kommen einige Wissensfragen, Fragen zu Ihrer subjektiven Kompetenzeinschätzung und Ihren persönlichen Interessen. Diese Standortbestimmung ist keine Prüfung, sondern es geht darum Ihr persönliches Entwicklungspotential aufzuzeigen, damit Sie möglichst effizient die Modulkompetenzen erreichen. Antworten Sie daher bitte ehrlich. Es wurden bewusst Fragen gewählt, die ein gewisses Vorwissen voraussetzen, damit wir Ihnen Empfehlungen zu, Besuch weiterer Lerngelegenheiten im Masterstudium geben können. </p>
+                    </div>
+                </div>
+                <div class="welcome-card">
+                    <div class="intro-text">
+                        <p>Der Fragebogen ist in folgende Dimensionen und Aspekte unterteilt:</p>
+                        <ul>
+                            <li><strong>Lehrperson:</strong> Wissen, Bewusstsein und Handeln</li>
+                            <li><strong>Unterricht:</strong> Prinzipien, Kompetenzen, Themen und Methoden</li>
+                            <li><strong>Schule:</strong> Schulentwicklung</li>
+                        </ul>
+                        <p>Nach Abschluss der Befragung erhalten Sie eine grafische Darstellung Ihrer Ergebnisse in Form eines Radar-Charts, das Ihre Selbsteinschätzung, Ihr objektives Wissen und Ihre Interessen in den verschiedenen Bereichen visualisiert.</p>
+                        <p>Bitte nehmen Sie sich ausreichend Zeit, um die Fragen sorgfältig zu beantworten. Die Bearbeitung dauert ca. 15-20 Minuten.</p>
+                        <p>Ihre Daten sind während dieser Befragung sicher. Der Fragebogen wird direkt über Ihren Browser ausgeführt, und es erfolgt keine Weitergabe Ihrer Informationen an Dritte.</p>
+                        <p>Klicken Sie auf "Weiter", um mit der Eingabe Ihrer persönlichen Daten zu beginnen.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Seite 1: Persönliche Daten -->
+        <div class="page" id="page-0">
+            <div class="intro-text">
+                <p>Bitte füllen Sie zunächst Ihre persönlichen Daten aus und beantworten Sie dann die Fragen auf den folgenden Seiten.</p>
+            </div>
+            <div class="form-group">
+                <label for="vorname">Vorname</label>
+                <input type="text" id="vorname" name="vorname">
+            </div>
+            <div class="form-group">
+                <label for="nachname">Nachname</label>
+                <input type="text" id="nachname" name="nachname">
+            </div>
+            <div class="form-group">
+                <label for="matrikelnummer">Matrikelnummer</label>
+                <input type="text" id="matrikelnummer" name="matrikelnummer">
+            </div>
+            <div class="form-group">
+                <label for="email">E-Mail-Adresse an PH</label>
+                <input type="email" id="email" name="email">
+            </div>
+            <div class="form-group">
+                <label>Studienfächer (maximal 4 Fächer auswählbar)</label>
+                <div class="subjects-grid" id="subjects-container">
+                    <!-- Wird dynamisch durch JavaScript gefüllt -->
+                </div>
+                <div class="selection-counter" id="selection-counter">Ausgewählte Fächer: 0/4</div>
+            </div>
+            <div class="form-group">
+                <label>Besuchte Lerngelegenheiten mit QT Label BNE</label>
+                <div class="custom-dropdown">
+                    <div class="selected-options" id="selected-lerngelegenheiten-display" onclick="document.getElementById('lerngelegenheiten-options').style.display = document.getElementById('lerngelegenheiten-options').style.display === 'block' ? 'none' : 'block';">
+                        <span class="placeholder">Bitte auswählen (Klicken zum Öffnen)...</span>
+                    </div>
+                    <div class="dropdown-options" id="lerngelegenheiten-options">
+                        <div class="search-container">
+                            <input type="text" id="lerngelegenheiten-search" placeholder="Suchen..." class="dropdown-search">
+                        </div>
+                        <div id="lerngelegenheiten-list">
+                            <!-- Wird dynamisch mit JavaScript gefüllt -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fragen-Seiten werden dynamisch generiert -->
+        <!-- Hier kommt pro Bereich eine eigene Seite -->
+        
+        <!-- Letzte Seite: Radar und Zusammenfassung -->
+        <div class="page" id="page-final">
+            <h2>Ihre Ergebnisse</h2>
+            <p>
+            Vielen Dank für die Beantwortung der Fragen. Hier ist die Zusammenfassung Ihrer Ergebnisse. Drücken Sie auf Abschliessen. Laden Sie diese bitte als pdf herunter und senden Sie das pdf bitte fristgerecht an: <mark>barbara.bamert@phbern.ch</mark><br></br>
+            Fügen Sie die Ergebnisse Ihrer Standortbestimmung bitte noch in Ihr professionelles BNE-Konzept ein oder verlinken Sie es.<br></br>
+            An der Standortbestimmung werden Rückmeldungen zu Spiderprofilen und Vorschläge gegeben, welche Lerngelegenheiten zu Ihrem Profil passen würden. Falls Sie eine individuelle Rückmeldung wünschen, können Sie gerne per Mail einen Beratungstermin vereinbaren.<br></br>
+            </p>
+            
+            <div class="grid results-grid">
+                <div>
+                    <!-- Persönliche Daten Sektion -->
+                    <div class="personal-data-section">
+                        <h3>Persönliche Daten</h3>
+                        <div id="personalDataSummary">
+                            <!-- Wird dynamisch gefüllt -->
+                        </div>
+                    </div>
+                    
+                    <!-- Ergebnisse nach Bereichen -->
+                    <div class="summary-section">
+                        <h3>Ergebnisse nach Bereichen</h3>
+                        <div id="resultsSummary">
+                            <!-- Wird dynamisch gefüllt -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Radar Graph Container -->
+                <div class="radar-container">
+                    <div class="color-picker-container">
+                        <h4>Farbgestaltung anpassen:</h4>
+                        <div class="color-picker-row">
+                            <label>
+                                <input type="color" id="subjektiv-color" value="#2563eb" onchange="updateChartColors()">
+                                Subjektiv
+                            </label>
+                            <label>
+                                <input type="color" id="objektiv-color" value="#16a34a" onchange="updateChartColors()">
+                                Objektiv
+                            </label>
+                            <label>
+                                <input type="color" id="interesse-color" value="#dc2626" onchange="updateChartColors()">
+                                Interesse
+                            </label>
+                            <button class="reset-colors-btn" onclick="resetChartColors()">Standardfarben</button>
+                        </div>
+                    </div>
+                    <canvas id="radarCanvas" width="1000" height="1000"></canvas>
+                    <div class="legend">
+                        <div class="legend-item">
+                            <svg width="30" height="15" viewBox="0 0 30 15">
+                                <circle cx="15" cy="7.5" r="6" fill="rgba(37, 99, 235, 0.9)" stroke="rgba(37, 99, 235, 0.9)" stroke-width="2"/>
+                            </svg>
+                            <span>Subjektiv</span>
+                        </div>
+                        <div class="legend-item">
+                            <svg width="30" height="15" viewBox="0 0 30 15">
+                                <path d="M15,2 L20.7,12 L9.3,12 Z" fill="rgba(22, 163, 74, 0.9)" stroke="rgba(22, 163, 74, 0.9)" stroke-width="2"/>
+                            </svg>
+                            <span>Objektiv</span>
+                        </div>
+                        <div class="legend-item">
+                            <svg width="30" height="15" viewBox="0 0 30 15">
+                                <rect x="9" y="1.5" width="12" height="12" fill="rgba(220, 38, 38, 0.9)" stroke="rgba(220, 38, 38, 0.9)" stroke-width="2"/>
+                            </svg>
+                            <span>Interesse</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="navigation">
+            <button id="prevButton" class="nav-button">Zurück</button>
+            <button id="nextButton" class="nav-button">Weiter</button>
+        </div>
+    </div>
+
+    <script>
+        // =========================================================
+        // FRAGENKATALOG - BEGINN
+        // =========================================================
+        // Grundlegende Konfiguration
+        const MIN_WERT = 0;  // Minimaler Wert für Antworten
+        const MAX_WERT = 3;  // Maximaler Wert für Antworten
+        const MAX_SELECTED_SUBJECTS = 4;  // Maximale Anzahl auswählbarer Fächer
+        
+        // Definition der Bewertungsbereiche
+        const BEREICHE = [
+            "Lehrperson: Wissen", 
+            "Lehrperson: Bewusstsein",
+            "Lehrperson: Handeln",
+            "Unterricht: Prinzipien",
+            "Unterricht: Kompetenzen",
+            "Unterricht: Themen",
+            "Unterricht: Methoden",
+            "Schule: Schulentwicklung",
+        ];
+
+        // Liste der Studienfächer (Kurzformen)
+        const STUDIENFAECHER = [
+            "D", "F", "M", "NT", "RZG", "WAH", "ERG", 
+            "E", "BS", "BG", "TTG", "MU", "I", "RR", "L"
+        ];
+
+        // Fächerbeschreibungen für bessere Lesbarkeit
+        const FACH_BESCHREIBUNGEN = {
+            "D": "Deutsch",
+            "F": "Französisch",
+            "M": "Mathematik",
+            "NT": "Natur & Technik",
+            "RZG": "Räume, Zeiten, Gesellschaften",
+            "WAH": "Wirtschaft, Arbeit, Haushalt",
+            "ERG": "Ethik, Religionen, Gemeinschaft",
+            "E": "Englisch",
+            "BS": "Bewegung und Sport",
+            "BG": "Bildnerisches Gestalten",
+            "TTG": "Textiles und Technisches Gestalten",
+            "MU": "Musik",
+            "I": "Italienisch",
+            "RR": "Rätoromanisch",
+            "L": "Latein"
+        };
+        
+        // Liste der verfügbaren Lerngelegenheiten
+        const LERNGELEGENHEITEN = [
+            {
+                id: "bne_intro",
+                semester: "HS",
+                kategorie: "Persönliche und professionelle Entwicklung",
+                titel: "Einführung BNE an der PHBern"
+            },
+            {
+                id: "bne_lehrplan",
+                semester: "HS & FS",
+                kategorie: "Mikro- / Makroplanung",
+                titel: "Bildung für Nachhaltige Entwicklung im Lehrplan"
+            },
+            {
+                id: "zukunftskompetenzen",
+                semester: "HS & FS",
+                kategorie: "Beratung & Begleitung",
+                titel: "Zukunftskompetenzen"
+            },
+            {
+                id: "partizipativ",
+                semester: "HS & FS",
+                kategorie: "Zusammenarbeit & Kommunikation",
+                titel: "Schule partizipativ gestalten"
+            },
+            {
+                id: "bne_konzept",
+                semester: "HS & FS",
+                kategorie: "Persönliche und professionelle Entwicklung",
+                titel: "Persönliches BNE-Konzept … hä?"
+            },
+            {
+                id: "achtsamkeit",
+                semester: "HS",
+                kategorie: "Klassenführung",
+                titel: "Sozio-emotionales Lernen & Beziehungsgestaltung – Achtsamkeit in der Schule"
+            },
+            {
+                id: "heterogenitaet",
+                semester: "HS",
+                kategorie: "Klassenführung",
+                titel: "Heterogenität im Klassenzimmer – mögliche Diagnosen und der Umgang damit"
+            },
+            {
+                id: "wah_fachverstaendnis",
+                semester: "HS & FS",
+                kategorie: "Fachkompetenz & Mehrperspektivität WAH",
+                titel: "Fach- und Bildungsverständnis WAH"
+            },
+            {
+                id: "konsum_nachhaltigkeit",
+                semester: "HS & FS",
+                kategorie: "Fachkompetenz & Mehrperspektivität WAH",
+                titel: "Lebensführung, Konsum und Nachhaltigkeit"
+            },
+            {
+                id: "wirtschaft_gesellschaft",
+                semester: "HS & FS",
+                kategorie: "Fachkompetenz & Mehrperspektivität WAH",
+                titel: "Wirtschaft und Gesellschaft"
+            },
+            {
+                id: "rzg_fachverstaendnis",
+                semester: "HS & FS",
+                kategorie: "Fachkompetenz RZG",
+                titel: "Fachverständnis RZG"
+            },
+            {
+                id: "globale_herausforderungen",
+                semester: "HS & FS",
+                kategorie: "Fachkompetenz & Mehrperspektivität RZG",
+                titel: "Globale Herausforderungen & lokal Brennpunkte"
+            },
+            {
+                id: "alpen",
+                semester: "HS & FS",
+                kategorie: "Fachkompetenz & Mehrperspektivität RZG",
+                titel: "Dynamische Alpen"
+            },
+            {
+                id: "menschenrechte",
+                semester: "HS & FS",
+                kategorie: "Fachkompetenz & Mehrperspektivität RZG",
+                titel: "Menschenrechte im Klassenzimmer"
+            },
+            {
+                id: "kunst_zugaenge",
+                semester: "FS",
+                kategorie: "Mikroplanung BG / Klassenführung BG",
+                titel: "Rezeptive Zugänge zur Bildenden Kunst und zu Bildwelten des Alltags"
+            }
+        ];
+
+        // Definition aller Fragen des Fragebogens
+        // Jede Frage hat: id, text, bereich, ebene, typ, antwortmöglichkeiten
+        const FRAGEN = [
+            // Lehrperson: Wissen (Nummerierung: 1x)
+            {
+                id: 11,
+                text: "Wie gut kennen Sie sich mit den SDG aus?",
+                bereich: "Lehrperson: Wissen",
+                ebene: "subjektiv",
+                typ: "slider",
+                antworten: [
+                    { text: "Keine Antwort", wert: 0 },
+                    { text: "Wenig oder grundlegend", wert: 1 },
+                    { text: "Fortgeschritten", wert: 2 },
+                    { text: "Hohe Expertise", wert: 3 }
+                ]
+            },
+            {
+                id: 12,
+                text: "Zu welcher Umsetzungsstrategie von Nachhaltigkeit passt die folgende Definition: «Weniger produzieren und konsumieren: Energie- und Materialverbrauch begrenzen. Beispiel: Vom Besitzen zum Teilen»",
+                bereich: "Lehrperson: Wissen",
+                ebene: "objektiv",
+                typ: "mc",
+                antworten: [
+                    { text: "Suffizienz", wert: 3 }, // korrekte Antwort
+                    { text: "Konsistenz", wert: 1 },
+                    { text: "Effizienz", wert: 1 }, 
+                ]
+            },
+            {
+                id: 13,
+                text: "Wie stark interessieren Sie sich für die SDG?",
+                bereich: "Lehrperson: Wissen",
+                ebene: "interesse",
+                typ: "slider",
+                antworten: [
+                    { text: "Keine Antwort", wert: 0 },
+                    { text: "Gering", wert: 1 },
+                    { text: "Mittel", wert: 2 },
+                    { text: "Hoch", wert: 3 }
+                ]
+            },
+            {
+                id: 14,
+                text: "Um mein Unterricht zielorientierter gestalten zu können, möchte ich noch mehr über die Leitidee von Nachhaltiger Entwicklung und die Ziele einer BNE erfahren.",
+                bereich: "Lehrperson: Wissen",
+                ebene: "interesse",
+                typ: "slider",
+                antworten: [
+                    { text: "Keine Antwort", wert: 0 },
+                    { text: "Trifft eher nicht zu", wert: 1 },
+                    { text: "Trifft eher zu", wert: 2 },
+                    { text: "Trifft zu", wert: 3 }
+                ]
+            },
+            {
+                id: 15,
+                text: "Der Lehrplan 21 bezieht sich auf das «Drei-Dimensionen-Modell der Nachhaltigen Entwicklung». Welche ist keine der drei Dimensionen?",
+                bereich: "Lehrperson: Wissen",
+                ebene: "objektiv",
+                typ: "mc",
+                antworten: [
+                    { text: "Gesellschaft", wert: 1 },
+                    { text: "Umwelt", wert: 1 },
+                    { text: "Soziales", wert: 3 }, // korrekte Antwort
+                    { text: "Wirtschaft", wert: 1 }
+                ]
+            },
+            {
+                id: 16,
+                text: "Ist die Förderung einer Nachhaltigen Entwicklung in der Schweizerischen Bundesverfassung als Auftrag staatlichen Handelns festgeschrieben?",
+                bereich: "Lehrperson: Wissen",
+                ebene: "objektiv",
+                typ: "mc",
+                antworten: [
+                    { text: "Ja", wert: 3 }, // korrekte Antwort
+                    { text: "Nein", wert: 1 }
+                ]
+            },
+            {
+                id: 17,
+                text: "Im BNE-Unterricht gibt es verschiedene normative Rahmen. Um welchen Ansatz handelt es sich bei: Vermittlung von Expertenwissen, Förderung nachhaltigen Verhaltens und Lernen für eine nachhaltige Entwicklung?",
+                bereich: "Lehrperson: Wissen",
+                ebene: "objektiv",
+                typ: "mc",
+                antworten: [
+                    { text: "Instrumenteller Ansatz", wert: 3 }, // korrekte Antwort
+                    { text: "Emanzipatorischer Ansatz", wert: 1 },
+                    { text: "Transformativer Ansatz", wert: 1 }
+                ]
+            },
+            {
+                id: 18,
+                text: "Im BNE-Unterricht gibt es verschiedene normative Rahmen. Um welchen Ansatz handelt es sich bei: Widersprüche (dialektisch) überwinden, nicht-Vorhersehbarkeit, Emotionen, Lernen durch nachhaltige Entwicklung?",
+                bereich: "Lehrperson: Wissen",
+                ebene: "objektiv",
+                typ: "mc",
+                antworten: [
+                    { text: "Instrumenteller Ansatz", wert: 1 },
+                    { text: "Emanzipatorischer Ansatz", wert: 1 },
+                    { text: "Transformativer Ansatz", wert: 3 } // korrekte Antwort
+                ]
+            },
+            {
+                id: 19,
+                text: "Welche Gefahr besteht primär bei einem emanzipatorischen Ansatz im BNE-Unterricht?",
+                bereich: "Lehrperson: Wissen",
+                ebene: "objektiv",
+                typ: "mc",
+                antworten: [
+                    { text: "Gefahr der Indoktrination", wert: 1 },
+                    { text: "Gefahr des Zeitmangels", wert: 3 } // korrekte Antwort
+                ]
+            },
+            // Lehrperson: Bewusstsein (Nummerierung: 2x)
+            {
+                id: 21,
+                text: "Ich fühle mich sicher, wie ich im BNE-Unterricht meinen Standpunkt und meine Meinung vertreten darf und kann.",
+                bereich: "Lehrperson: Bewusstsein",
+                ebene: "subjektiv",
+                typ: "slider",
+                antworten: [
+                    { text: "Trifft nicht zu", wert: 1 },
+                    { text: "Trifft eher zu", wert: 2 },
+                    { text: "Trifft zu", wert: 3 }
+                ]
+            },
+            {
+                id: 22,
+                text: "Der Beutelsbacher Konsens besagt, dass sich Lehrpersonen im Unterricht nicht zu politisch heiklen Themen äussern sollten.",
+                bereich: "Lehrperson: Bewusstsein",
+                ebene: "objektiv",
+                typ: "mc",
+                antworten: [
+                    { text: "Richtig", wert: 1 },
+                    { text: "Falsch", wert: 3 }, // korrekte Antwort
+                    { text: "Teilweise richtig", wert: 1 },
+                ]
+            },
+            {
+                id: 23,
+                text: "Ich möchte mehr über den Beutelsbacher Konsens erfahren und mich mit der Umsetzung von BNE im Unterricht auseinandersetzen",
+                bereich: "Lehrperson: Bewusstsein",
+                ebene: "interesse",
+                typ: "slider",
+                antworten: [
+                    { text: "Trifft eher nicht zu", wert: 1 },
+                    { text: "Trifft eher zu", wert: 2 },
+                    { text: "Trifft sehr zu", wert: 3 }
+                ]
+            },
+            {
+                id: 24,
+                text: "Ich kann mich gut zu den Zielen einer (B)NE positionieren und habe eine klare Haltung zu dem aktuellen Diskurs.",
+                bereich: "Lehrperson: Bewusstsein",
+                ebene: "subjektiv",
+                typ: "slider",
+                antworten: [
+                    { text: "Trifft nicht zu", wert: 1 },
+                    { text: "Trifft eher zu", wert: 2 },
+                    { text: "Trifft zu", wert: 3 }
+                ]
+            },
+            {
+                id: 25,
+                text: "Ich fühle mich noch nicht sicher, wie ich im BNE-Unterricht meinen Standpunkt und meine Meinung vertreten kann. Ich möchte deshalb noch mehr darüber erfahren, was im BNE-Unterricht erwünscht, und was verboten ist.",
+                bereich: "Lehrperson: Bewusstsein",
+                ebene: "interesse",
+                typ: "slider",
+                antworten: [
+                    { text: "Keine Antwort", wert: 0 },
+                    { text: "Trifft nicht zu", wert: 1 },
+                    { text: "Trifft teilweise zu", wert: 2 },
+                    { text: "Trifft zu", wert: 3 }
+                ]
+            },
+
+            // Lehrperson: Handeln (Nummerierung: 3x)
+            {
+                id: 31,
+                text: "Wie stark beschäftigt Sie die Frage, wie Ihr Handeln als Lehrperson das Lernen der Schüler*innen in Bezug auf BNE beeinflusst?",
+                bereich: "Lehrperson: Handeln",
+                ebene: "subjektiv",
+                typ: "slider",
+                antworten: [
+                    { text: "Keine Antwort", wert: 0 },
+                    { text: "Wenig", wert: 1 },
+                    { text: "Mittel", wert: 2 },
+                    { text: "Stark", wert: 3 }
+                ]
+            },
+            {
+                id: 32,
+                text: "Die lernförderlichen Gelegenheiten werden im Rahmen der Agenda 2030 zusammen mit den Schlüsselkompetenzen einer BNE als wichtig erachtet.",
+                bereich: "Lehrperson: Handeln",
+                ebene: "objektiv",
+                typ: "mc",
+                antworten: [
+                    { text: "Richtig", wert: 3 }, // korrekte Antwort
+                    { text: "Falsch", wert: 1 }, 
+                   
+                ]
+            },
+            {
+                id: 33,
+                text: "Der Whole Institution Approach (WIA) zeigt Möglichkeiten auf, wie BNE in der Schule ohne Einbezug von ausserschulischen Akteur:innen umgesetzt werden kann.",
+                bereich: "Lehrperson: Handeln",
+                ebene: "objektiv",
+                typ: "mc",
+                antworten: [
+                    { text: "Richtig", wert: 1 }, 
+                    { text: "Falsch", wert: 3 }, // korrekte Antwort
+                   
+                ]
+            },
+            {
+                id: 35,
+                text: "Inwiefern haben Sie BNE bereits in Ihrem Unterricht / in Ihren Praktika integrieren können?",
+                bereich: "Lehrperson: Handeln",
+                ebene: "subjektiv",
+                typ: "slider",
+                antworten: [
+                    { text: "Keine Antwort", wert: 0 },
+                    { text: "Gar nicht", wert: 1 },
+                    { text: "Ein bisschen", wert: 2 },
+                    { text: "Stark", wert: 3 }
+                ]
+            },
+            {
+                id: 36,
+                text: "Um mein eigenes Rollen- und Funktionsverständnis in Zusammenhang mit nachhaltiger Entwicklung und BNE als Lehrperson zu definieren, möchte ich mich mit entsprechenden Konzepten auseinandersetzen.",
+                bereich: "Lehrperson: Handeln",
+                ebene: "interesse",
+                typ: "slider",
+                antworten: [
+                    { text: "Keine Antwort", wert: 0 },
+                    { text: "Stimme eher nicht zu", wert: 1 },
+                    { text: "Stimme teilweise zu", wert: 2 },
+                    { text: "Stimme zu", wert: 3 }
+                ]
+            },
+
+            // Unterricht: Prinzipien (Nummerierung: 4x)
+            {
+                id: 41,
+                text: "Ich kenne bereits viele BNE-relevante Prinzipien, die ich im Unterricht umsetzen kann.",
+                bereich: "Unterricht: Prinzipien",
+                ebene: "subjektiv",
+                typ: "slider",
+                antworten: [
+                    { text: "Keine Antwort", wert: 0 },
+                    { text: "Trifft nicht zu", wert: 1 },
+                    { text: "Trifft teilweise zu", wert: 2 },
+                    { text: "Trifft zu", wert: 3 }
+                ]
+            },
+            {
+                id: 42,
+                text: "Aktualitätsbezug ist als eines von drei didaktischen BNE-Prinzipen im Lehrplan 21 verankert. Ist die Aussage korrekt?",
+                bereich: "Unterricht: Prinzipien",
+                ebene: "objektiv",
+                typ: "mc",
+                antworten: [
+                    { text: "Ja", wert: 1 },
+                    { text: "Nein", wert: 3 } // korrekte Antwort
+                ]
+            },
+            {
+                id: 43,
+                text: "«Im Unterricht werden eigene und kollektive Denkweisen und Werte aufgespürt und miteinander verglichen.» Um welches pädagogische Prinzip von éducation21 handelt es sich?",
+                bereich: "Unterricht: Prinzipien",
+                ebene: "objektiv",
+                typ: "mc",
+                antworten: [
+                    { text: "Wertereflexion und Handlungsorientierung", wert: 3 }, // korrekte Antwort
+                    { text: "Chancengerechtigkeit", wert: 1 },
+                    { text: "Partizipation und Empowerment", wert: 1 }
+                ]
+            },
+            {
+                id: 44,
+                text: "«Nachhaltige Entwicklung ist ein optimistischer Ansatz, der sich an einer positiven Zukunft orientiert.» Um welches pädagogische Prinzip von éducation21 handelt es sich?",
+                bereich: "Unterricht: Prinzipien",
+                ebene: "objektiv",
+                typ: "mc",
+                antworten: [
+                    { text: "Visionsorientierung", wert: 3 }, // korrekte Antwort
+                    { text: "Vernetztes Denken", wert: 1 },
+                    { text: "Partizipation und Empowerment", wert: 1 }
+                ]
+            },
+            {
+                id: 45,
+                text: "Um die BNE-Prinzipien noch besser verstehen zu können, möchte ich mich vertiefter mit diesen befassen.",
+                bereich: "Unterricht: Prinzipien",
+                ebene: "interesse",
+                typ: "slider",
+                antworten: [
+                    { text: "Keine Antwort", wert: 0 },
+                    { text: "Stimme eher nicht zu", wert: 1 },
+                    { text: "Stimme teilweise zu", wert: 2 },
+                    { text: "Stimme zu", wert: 3 }
+                ]
+            },
+
+            // Unterricht: Kompetenzen (Nummerierung: 5x)
+            {
+                id: 51,
+                text: "Wie gut können Sie BNE-Kompetenzen in Ihrem Unterricht fördern?",
+                bereich: "Unterricht: Kompetenzen",
+                ebene: "subjektiv",
+                typ: "slider",
+                antworten: [
+                    { text: "Keine Antwort", wert: 0 },
+                    { text: "Grundlegend", wert: 1 },
+                    { text: "Gut", wert: 2 },
+                    { text: "Sehr gut", wert: 3 }
+                ]
+            },
+            {
+                id: 52,
+                text: "Die von éducation21 formulierten Kompetenzen können den DeSeCo-Schlüsselkompetenzen zugeordnet werden. Zu welcher Kategorie gehören Verantwortung, Werte und Handeln?",
+                bereich: "Unterricht: Kompetenzen",
+                ebene: "objektiv",
+                typ: "mc",
+                antworten: [
+                    { text: "Interaktive Verwendung von Medien und Tools", wert: 1 },
+                    { text: "Interagieren in heterogenen Gruppen", wert: 1 },
+                    { text: "Eigenständiges Handeln", wert: 3 } // korrekte Antwort
+                ]
+            },
+            {
+                id: 53,
+                text: "Im Lehrplan 21 sind spezifische BNE-Kompetenzen ausformuliert.",
+                bereich: "Unterricht: Kompetenzen",
+                ebene: "objektiv",
+                typ: "mc",
+                antworten: [
+                    { text: "Ja", wert: 1 },
+                    { text: "Nein, nur über fächerübergreifende Querverweise", wert: 3 }, // korrekte Antwort
+                    { text: "Nein, überhaupt nicht", wert: 1 }
+                ]
+            },
+            {
+                id: 54,
+                text: "Wie gut kennen Sie sich mit den BNE-Kompetenzen aus?",
+                bereich: "Unterricht: Kompetenzen",
+                ebene: "subjektiv",
+                typ: "slider",
+                antworten: [
+                    { text: "Keine Antwort", wert: 0 },
+                    { text: "Wenig Kenntnisse", wert: 1 },
+                    { text: "Mittlere Kompetenzen", wert: 2 },
+                    { text: "Hohe Kompetenzen", wert: 3 }
+                ]
+            },
+            {
+                id: 55,
+                text: "Um welche BNE-Kompetenz nach éducation21 handelt es sich: «Sich als Teil der Welt erfahren (Sich selbst, die soziale und natürliche Umwelt ganzheitlich und im globalen Kontext wahrnehmen)»?",
+                bereich: "Unterricht: Kompetenzen",
+                ebene: "objektiv",
+                typ: "mc",
+                antworten: [
+                    { text: "Verantwortung", wert: 3 }, // korrekte Antwort
+                    { text: "Partizipation", wert: 1 },
+                    { text: "Kooperation", wert: 1 }
+                ]
+            },
+            {
+                id: 56,
+                text: "Um meinen Unterricht kompetenzorientiert gestalten zu können, möchte ich mich noch vertiefter mit den BNE-Kompetenzen auseinandersetzen.",
+                bereich: "Unterricht: Kompetenzen",
+                ebene: "interesse",
+                typ: "slider",
+                antworten: [
+                    { text: "Keine Antwort", wert: 0 },
+                    { text: "Stimme eher nicht zu", wert: 1 },
+                    { text: "Stimme teilweise zu", wert: 2 },
+                    { text: "Stimme zu", wert: 3 }
+                ]
+            },
+            {
+                id: 57,
+                text: "Wie schätzen Sie Ihre Kompetenzen im Bereich der BNE im Unterricht ein?",
+                bereich: "Unterricht: Kompetenzen",
+                ebene: "subjektiv",
+                typ: "slider",
+                antworten: [
+                    { text: "Keine Antwort", wert: 0 },
+                    { text: "Wenig Kenntnisse", wert: 1 },
+                    { text: "Mittlere Kompetenzen", wert: 2 },
+                    { text: "Hohe Kompetenzen", wert: 3 }
+                ]
+            },
+            {
+                id: 58,
+                text: "Die Kompetenz zur integrierten Problemlösung (Schlüsselkompetenzen für BNE im Rahmen der Agenda 2030) beinhaltet die Fähigkeit die eigenen Werte, Wahrnehmungen und Handlungen zu reflektieren.",
+                bereich: "Unterricht: Kompetenzen",
+                ebene: "objektiv",
+                typ: "mc",
+                antworten: [
+                    { text: "Ja", wert: 1 }, 
+                    { text: "Nein", wert: 3 }, // korrekte Antwort
+                 
+                ]
+            },
+
+            // Unterricht: Themen (Nummerierung: 6x)
+            {
+                id: 61,
+                text: "Wie gut kennen Sie die fächerübergreifenden Themen zu nachhaltiger Entwicklung im Lehrplan 21?",
+                bereich: "Unterricht: Themen",
+                ebene: "subjektiv",
+                typ: "slider",
+                antworten: [
+                    { text: "Keine Antwort", wert: 0 },
+                    { text: "Wenig", wert: 1 },
+                    { text: "Gut", wert: 2 },
+                    { text: "Sehr gut", wert: 3 }
+                ]
+            },
+            {
+                id: 62,
+                text: "Im Lehrplan 21 ist das Thema \"Geschlechter und Gleichstellung\" kein fächerübergreifendes Thema im Kontext Bildung für nachhaltige Entwicklung.",
+                bereich: "Unterricht: Themen",
+                ebene: "objektiv",
+                typ: "mc",
+                antworten: [
+                    { text: "Richtig", wert: 1 },
+                    { text: "Falsch", wert: 3 } // korrekte Antwort
+                ]
+            },
+            {
+                id: 63,
+                text: "Im Lehrplan 21 werden sieben fächerübergreifende Themen unter der Leitidee Nachhaltiger Entwicklung aufgeführt.",
+                bereich: "Unterricht: Themen",
+                ebene: "objektiv",
+                typ: "mc",
+                antworten: [
+                    { text: "Richtig", wert: 3 }, // korrekte Antwort
+                    { text: "Falsch", wert: 1 }
+                ]
+            },
+            {
+                id: 64,
+                text: "Wie interessiert sind Sie daran, sich mit fächerübergreifenden Themen zur nachhaltigen Entwicklung auseinanderzusetzen?",
+                bereich: "Unterricht: Themen",
+                ebene: "interesse",
+                typ: "slider",
+                antworten: [
+                    { text: "Keine Antwort", wert: 0 },
+                    { text: "Wenig interessiert", wert: 1 },
+                    { text: "Interessiert", wert: 2 },
+                    { text: "sehr interessiert", wert: 3 }
+                ]
+            },
+            {
+                id: 65,
+                text: "Im Lehrplan 21 finden sich zusätzlich zu den fächerübergreifenden Themen bei den fachspezifischen Kompetenzen noch BNE-Verweise.",
+                bereich: "Unterricht: Themen",
+                ebene: "objektiv",
+                typ: "mc",
+                antworten: [
+                    { text: "Nein", wert: 1 },
+                    { text: "Ja", wert: 3 } // korrekte Antwort
+                ]
+            },
+            {
+                id: 66,
+                text: "Ich kann mir vorstellen auch weitere Themen interdisziplinär in meinen Fächern zu behandeln.",
+                bereich: "Unterricht: Themen",
+                ebene: "subjektiv",
+                typ: "slider",
+                antworten: [
+                    { text: "Keine Antwort", wert: 0 },
+                    { text: "Wenig interessiert", wert: 1 },
+                    { text: "Interessiert", wert: 2 },
+                    { text: "Sehr interessiert", wert: 3 }
+                ]
+            },
+
+            // Unterricht: Methoden (Nummerierung: 7x)
+            {
+                id: 71,
+                text: "Wie gut beherrschen Sie unterschiedliche Methoden zur Förderung von BNE im Unterricht?",
+                bereich: "Unterricht: Methoden",
+                ebene: "subjektiv",
+                typ: "slider",
+                antworten: [
+                    { text: "Keine Antwort", wert: 0 },
+                    { text: "Grundlegend", wert: 1 },
+                    { text: "Gut", wert: 2 },
+                    { text: "Sehr gut", wert: 3 }
+                ]
+            },
+            {
+                id: 72,
+                text: "Für die Förderung von kreativen Lösungsansätzen bei Nachhaltigkeitsproblemen eignet sich im Kontext von BNE die Methode Design Thinking.",
+                bereich: "Unterricht: Methoden",
+                ebene: "objektiv",
+                typ: "mc",
+                antworten: [
+                    { text: "Ja", wert: 3 }, // korrekte Antwort
+                    { text: "Nein", wert: 1 }
+                ]
+            },
+            {
+                id: 73,
+                text: "Schüler*innen setzen sich mit einem moralischen Dilemma auseinander und beschreiben ihre Gefühle. Welcher Unterrichtszugang trifft am besten zu?",
+                bereich: "Unterricht: Methoden",
+                ebene: "objektiv",
+                typ: "mc",
+                antworten: [
+                    { text: "Transformatives Lernen", wert: 3 }, // korrekte Antwort
+                    { text: "Entdeckendes Lernen", wert: 1 },
+                    { text: "Situatives Lernen", wert: 1 }
+                ]
+            },
+            {
+                id: 74,
+                text: "Wie interessiert sind Sie daran, diese Unterrichtsmethoden für BNE in Ihrem Unterricht umzusetzen?",
+                bereich: "Unterricht: Methoden",
+                ebene: "interesse",
+                typ: "slider",
+                antworten: [
+                    { text: "Keine Antwort", wert: 0 },
+                    { text: "Wenig interessiert", wert: 1 },
+                    { text: "Interessiert", wert: 2 },
+                    { text: "sehr interessiert", wert: 3 }
+                ]
+            },
+            {
+                id: 75,
+                text: "Das problembasierte Lernen ist eine Methode der Zukunftswerkstatt.",
+                bereich: "Unterricht: Methoden",
+                ebene: "objektiv",
+                typ: "mc",
+                antworten: [
+                    { text: "Ja", wert: 1 }, 
+                    { text: "Nein", wert: 3 }, // korrekte Antwort
+                ]
+            },
+
+            // Schule: Schulentwicklung (Nummerierung: 8x)
+            {
+                id: 81,
+                text: "Welche der untenstehenden Massnahmen ist für den Whole Institution Approach <mark> nicht </mark> von zentraler Bedeutung?",
+                bereich: "Schule: Schulentwicklung",
+                ebene: "objektiv",
+                typ: "mc",
+                antworten: [
+                    { text: "Fächerübergreifende Projekte", wert: 1 },
+                    { text: "Politische Einstellung von Lehrpersonen", wert: 3 }, // korrekte Antwort
+                    { text: "Partizipative Schulkultur", wert: 1 },
+                ]
+            },
+            {
+                id: 82,
+                text: "Das wichtigste Anliegen des Whole Institution Approaches ist es, dass alle Lehrpersonen BNE in ihrem Unterricht umsetzen.",
+                bereich: "Schule: Schulentwicklung",
+                ebene: "objektiv",
+                typ: "mc",
+                antworten: [
+                    { text: "Ja", wert: 3 }, // korrekte Antwort
+                    { text: "Nein", wert: 1 }
+                ]
+            },
+            {
+                id: 83,
+                text: "Wie gut verstehen Sie das Konzept des Whole Institution Approach für die Umsetzung von BNE?",
+                bereich: "Schule: Schulentwicklung",
+                ebene: "subjektiv",
+                typ: "slider",
+                antworten: [
+                    { text: "Keine Antwort", wert: 0 },
+                    { text: "Grundlegend", wert: 1 },
+                    { text: "Gut", wert: 2 },
+                    { text: "Sehr gut", wert: 3 }
+                ]
+            },
+            {
+                id: 84,
+                text: "Wie interessiert sind Sie an der Umsetzung von BNE im schulischen Kontext als angehende Lehrperson?",
+                bereich: "Schule: Schulentwicklung",
+                ebene: "interesse",
+                typ: "slider",
+                antworten: [
+                    { text: "Keine Antwort", wert: 0 },
+                    { text: "Wenig interessiert", wert: 1 },
+                    { text: "Interessiert", wert: 2 },
+                    { text: "sehr interessiert", wert: 3 }
+                ]
+            }
+    
+        ];
+        // =========================================================
+        // FRAGENKATALOG - ENDE
+        // =========================================================
+
+        // Globale Zustandsvariablen
+        let antworten = {};  // Speichert alle Antworten
+        let personalData = {};  // Speichert persönliche Daten
+        let currentPage = 0;  // Aktuelle Seite
+        let pages = [];  // Liste aller Seiten
+        let selectedSubjects = [];  // Ausgewählte Studienfächer
+        let selectedLerngelegenheiten = [];  // Ausgewählte Lerngelegenheiten
+        
+        // Handler für Lerngelegenheit-Auswahl
+        function handleLerngelegenheitSelection(lgId) {
+            // Toggle Auswahl: Hinzufügen falls nicht vorhanden, entfernen falls vorhanden
+            if (selectedLerngelegenheiten.includes(lgId)) {
+                selectedLerngelegenheiten = selectedLerngelegenheiten.filter(id => id !== lgId);
+            } else {
+                selectedLerngelegenheiten.push(lgId);
+            }
+            
+            // Element-Stil aktualisieren
+            const element = document.querySelector(`.dropdown-option[data-id="${lgId}"]`);
+            if (element) {
+                if (selectedLerngelegenheiten.includes(lgId)) {
+                    element.classList.add('selected');
+                } else {
+                    element.classList.remove('selected');
+                }
+            }
+            
+            // Ausgewählte Elemente anzeigen
+            updateSelectedLerngelegenheitenDisplay();
+        }
+        
+        // Funktion zum Aktualisieren der Anzeige der ausgewählten Lerngelegenheiten
+        function updateSelectedLerngelegenheitenDisplay() {
+            const display = document.getElementById('selected-lerngelegenheiten-display');
+            if (!display) return;
+            
+            // Zeige Platzhalter, wenn keine Lerngelegenheiten ausgewählt sind
+            if (selectedLerngelegenheiten.length === 0) {
+                display.innerHTML = '<span class="placeholder">Bitte auswählen (Klicken zum Öffnen)...</span>';
+                return;
+            }
+            
+            // Generiere Tags für ausgewählte Lerngelegenheiten
+            display.innerHTML = selectedLerngelegenheiten.map(id => {
+                const lg = LERNGELEGENHEITEN.find(item => item.id === id);
+                if (!lg) return '';
+                
+                return `<span class="selected-tag">${lg.titel} <span class="remove-tag" onclick="removeLerngelegenheit('${id}')">×</span></span>`;
+            }).join('');
+        }
+        
+        // Funktion zum Entfernen einer Lerngelegenheit
+        function removeLerngelegenheit(id) {
+            event.stopPropagation(); // Verhindert, dass das Dropdown sich schliesst
+            
+            // Aus der Auswahl entfernen
+            selectedLerngelegenheiten = selectedLerngelegenheiten.filter(item => item !== id);
+            
+            // Element-Stil aktualisieren
+            const element = document.querySelector(`.dropdown-option[data-id="${id}"]`);
+            if (element) {
+                element.classList.remove('selected');
+            }
+            
+            // Anzeige aktualisieren
+            updateSelectedLerngelegenheitenDisplay();
+        }
+        
+        // Seiten nach Bereichen erstellen
+        function initPages() {
+            // Startseite und persönliche Daten-Seite sind bereits im HTML vorhanden
+            
+            // Gruppiere Fragen nach Bereichen für bessere Organisation
+            const bereicheFragen = BEREICHE.reduce((acc, bereich) => {
+                acc[bereich] = FRAGEN.filter(frage => frage.bereich === bereich);
+                return acc;
+            }, {});
+            
+            // Erstelle für jeden Bereich eine eigene Fragensei
+            let pageIndex = 1; // Start bei 1, weil 0 bereits persönliche Daten sind
+            BEREICHE.forEach(bereich => {
+                const pageId = `page-${pageIndex}`;
+                pages.push(pageId);
+                
+                // Erstelle Container für diesen Bereich
+                const pageDiv = document.createElement('div');
+                pageDiv.className = 'page';
+                pageDiv.id = pageId;
+                
+                // Titel für den Bereich
+                const bereichTitel = document.createElement('h2');
+                bereichTitel.textContent = bereich;
+                pageDiv.appendChild(bereichTitel);
+                
+                // Fragen für diesen Bereich hinzufügen
+                const bereichContainer = document.createElement('div');
+                bereichContainer.id = `bereich-${pageIndex}`;
+                pageDiv.appendChild(bereichContainer);
+                
+                // Füge die Seite zum Dokument hinzu
+                document.querySelector('.container').insertBefore(pageDiv, document.getElementById('page-final'));
+                
+                pageIndex++;
+            });
+            
+            // Final-Seite als letzte Seite hinzufügen
+            pages.push('page-final');
+            
+            // Fortschrittsanzeige erstellen
+            updateProgressIndicator();
+        }
+
+        // Fortschrittsanzeige aktualisieren
+        function updateProgressIndicator() {
+            const progressContainer = document.getElementById('progressIndicator');
+            progressContainer.innerHTML = '';
+            
+            const totalPages = pages.length + 2; // +1 für Startseite, +1 für persönliche Daten
+            
+            // Erstelle einen Punkt für jede Seite im Fortschrittsbalken
+            for (let i = 0; i < totalPages; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'progress-dot';
+                // Markiere den aktuellen Punkt
+                if (i === currentPage) {
+                    dot.classList.add('active');
+                }
+                progressContainer.appendChild(dot);
+            }
+        }
+
+        // Fragen für den aktuellen Bereich rendern
+        function renderFragen() {
+            // Keine Fragen auf der Start-, persönlichen Daten- und Ergebnisseite
+            if (currentPage === 0 || currentPage === 1 || currentPage === pages.length + 1) {
+                return; 
+            }
+            
+            const bereichIndex = currentPage - 2; // -2 wegen Start- und persönlicher Daten-Seite
+            const bereich = BEREICHE[bereichIndex];
+            const bereichContainer = document.getElementById(`bereich-${currentPage - 1}`);
+            
+            // Fragen für diesen Bereich filtern
+            const bereichFragen = FRAGEN.filter(frage => frage.bereich === bereich);
+            
+            // HTML für alle Fragen des Bereichs erstellen
+            bereichContainer.innerHTML = bereichFragen.map(frage => {
+                if (frage.typ === 'slider') {
+                    return `
+                        <div class="question-card">
+                            <div class="question-title">${frage.text}</div>
+                            <div class="meta-info">
+                                Ebene: ${frage.ebene}
+                            </div>
+                            <div class="slider-container">
+                                <input 
+                                    type="range" 
+                                    min="${MIN_WERT}" 
+                                    max="${MAX_WERT}" 
+                                    step="1"
+                                    value="${antworten[frage.id] || MIN_WERT}"
+                                    onchange="handleAntwort(${frage.id}, parseInt(this.value))"
+                                    oninput="this.nextElementSibling.nextElementSibling.textContent = this.value"
+                                    class="slider"
+                                >
+                                <div class="slider-labels">
+                                    ${frage.antworten.map(antwort => `
+                                        <span>${antwort.text}</span>
+                                    `).join('')}
+                                </div>
+                                <div class="slider-value">${antworten[frage.id] || MIN_WERT}</div>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    return `
+                        <div class="question-card">
+                            <div class="question-title">${frage.text}</div>
+                            <div class="meta-info">
+                                Ebene: ${frage.ebene}
+                            </div>
+                            <div class="mc-group">
+                                ${frage.antworten.map((antwort, idx) => `
+                                    <label class="mc-option">
+                                        <input 
+                                            type="radio" 
+                                            name="frage-${frage.id}" 
+                                            value="${antwort.wert}"
+                                            ${antworten[frage.id] === antwort.wert ? 'checked' : ''}
+                                            onchange="handleAntwort(${frage.id}, ${antwort.wert})"
+                                        >
+                                        ${antwort.text}
+                                    </label>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+            }).join('');
+        }
+
+        // Sammeln der persönlichen Daten aus dem Formular
+        function collectPersonalData() {
+            personalData = {
+                vorname: document.getElementById('vorname').value,
+                nachname: document.getElementById('nachname').value,
+                matrikelnummer: document.getElementById('matrikelnummer').value,
+                email: document.getElementById('email').value,
+                studienfaecher: selectedSubjects,
+                lerngelegenheiten: selectedLerngelegenheiten.map(id => {
+                    const lg = LERNGELEGENHEITEN.find(item => item.id === id);
+                    return lg ? `${lg.titel} (${lg.kategorie}, ${lg.semester})` : id;
+                })
+            };
+        }
+
+        // Anzeigen der persönlichen Daten auf der Ergebnisseite
+        function renderPersonalData() {
+            const container = document.getElementById('personalDataSummary');
+            
+            // Überprüfen, ob persönliche Daten vorhanden sind
+            const hasData = Object.values(personalData).some(value => 
+                Array.isArray(value) ? value.length > 0 : (value && value.trim && value.trim() !== '')
+            );
+            
+            if (!hasData) {
+                container.innerHTML = '<p>Keine persönlichen Daten angegeben.</p>';
+                return;
+            }
+            
+            // Beschriftungen für die persönlichen Daten
+            const labels = {
+                vorname: 'Vorname',
+                nachname: 'Nachname',
+                matrikelnummer: 'Matrikelnummer',
+                email: 'E-Mail',
+                studienfaecher: 'Studienfächer',
+                lerngelegenheiten: 'Besuchte Lerngelegenheiten'
+            };
+            
+            // HTML für die Datenfelder generieren
+            let html = '';
+            for (const [key, value] of Object.entries(personalData)) {
+                // Spezialbehandlung für Studienfächer-Array
+                if (key === 'studienfaecher' && Array.isArray(value) && value.length > 0) {
+                    const faecherMitBeschreibung = value.map(fach => 
+                        `${fach} (${FACH_BESCHREIBUNGEN[fach] || fach})`
+                    );
+                    html += `
+                        <div class="personal-data-item">
+                            <span class="personal-data-label">${labels[key]}:</span> 
+                            ${faecherMitBeschreibung.join(', ')}
+                        </div>
+                    `;
+                }
+                // Spezialbehandlung für Lerngelegenheiten-Array
+                else if (key === 'lerngelegenheiten' && Array.isArray(value) && value.length > 0) {
+                    html += `
+                        <div class="personal-data-item">
+                            <span class="personal-data-label">${labels[key]}:</span>
+                            <ul class="lerngelegenheiten-list">
+                                ${value.map(item => `<li>${item}</li>`).join('')}
+                            </ul>
+                        </div>
+                    `;
+                }
+                // Normale Textfelder
+                else if (key !== 'studienfaecher' && key !== 'lerngelegenheiten' && 
+                         value && (!Array.isArray(value) && value.trim !== undefined && value.trim() !== '')) {
+                    html += `
+                        <div class="personal-data-item">
+                            <span class="personal-data-label">${labels[key]}:</span> 
+                            ${value}
+                        </div>
+                    `;
+                }
+            }
+            
+            container.innerHTML = html;
+        }
+
+        // Ergebniszusammenfassung anzeigen
+        function renderResultsSummary() {
+            const resultContainer = document.getElementById('resultsSummary');
+            
+            // Ergebnisse für jeden Bereich berechnen
+            const bereichErgebnisse = BEREICHE.map(bereich => {
+                const bereichFragen = FRAGEN.filter(frage => frage.bereich === bereich);
+                const ebenen = ['subjektiv', 'objektiv', 'interesse'];
+                
+                // Für jede Ebene Durchschnittswerte berechnen
+                const ebenenWerte = ebenen.map(ebene => {
+                    const ebenenFragen = bereichFragen.filter(frage => frage.ebene === ebene);
+                    const beantworteteFragen = ebenenFragen.filter(frage => antworten[frage.id] !== undefined);
+                    
+                    if (beantworteteFragen.length === 0) return 0;
+                    
+                    const summe = beantworteteFragen.reduce((sum, frage) => sum + antworten[frage.id], 0);
+                    return (summe / beantworteteFragen.length).toFixed(1);
+                });
+                
+                // HTML für einen Bereich generieren
+                return `
+                    <div style="margin-bottom: 10px;">
+                        <strong>${bereich}</strong>
+                        <ul style="margin-top: 5px;">
+                            <li>Subjektiv: ${ebenenWerte[0]}</li>
+                            <li>Objektiv: ${ebenenWerte[1]}</li>
+                            <li>Interesse: ${ebenenWerte[2]}</li>
+                        </ul>
+                    </div>
+                `;
+            });
+            
+            // Bereiche in zwei Spalten aufteilen für übersichtlicheres Layout
+            const mitte = Math.ceil(bereichErgebnisse.length / 2);
+            const ergebnisseLinks = bereichErgebnisse.slice(0, mitte).join('');
+            const ergebnisseRechts = bereichErgebnisse.slice(mitte).join('');
+            
+            // HTML für zwei Spalten erzeugen
+            const html = `
+                <div class="results-columns">
+                    <div class="results-column">${ergebnisseLinks}</div>
+                    <div class="results-column">${ergebnisseRechts}</div>
+                </div>
+            `;
+            
+            resultContainer.innerHTML = bereichErgebnisse.length > 0 ? html : '<p>Keine Daten vorhanden.</p>';
+        }
+
+        // Canvas-Initialisierung für den Radar-Chart
+        function setupCanvas(canvas) {
+            // Setze Canvas auf Grösse mit guter Auflösung für scharfe Darstellung
+            canvas.width = 1600;
+            canvas.height = 1600;
+            
+            // Setze Display-Grösse via CSS für responsive Darstellung
+            canvas.style.width = '100%';
+            canvas.style.height = 'auto';
+            canvas.style.maxWidth = '1000px';
+            
+            const ctx = canvas.getContext('2d');
+            
+            // Aktiviere Anti-Aliasing für glattere Linien
+            ctx.imageSmoothingEnabled = true;
+            ctx.imageSmoothingQuality = 'high';
+            
+            return ctx;
+        }
+
+        // Antwort-Handler für Fragebeantwortung
+        function handleAntwort(fragenId, wert) {
+            antworten[fragenId] = wert;
+        }
+
+        // Handler für Fachauswahl
+        function handleSubjectSelection(event) {
+            const subject = event.target.getAttribute('data-subject');
+            const isSelected = selectedSubjects.includes(subject);
+            
+            if (isSelected) {
+                // Entferne Fach aus der Auswahl
+                selectedSubjects = selectedSubjects.filter(s => s !== subject);
+                event.target.classList.remove('selected');
+            } else {
+                // Füge Fach zur Auswahl hinzu, wenn maximale Anzahl nicht erreicht
+                if (selectedSubjects.length < MAX_SELECTED_SUBJECTS) {
+                    selectedSubjects.push(subject);
+                    event.target.classList.add('selected');
+                }
+            }
+            
+            // Zähler aktualisieren
+            updateSubjectCounter();
+            
+            // Alle Fächer aktivieren/deaktivieren basierend auf der Auswahlanzahl
+            updateSubjectAvailability();
+        }
+
+        // Zähler für ausgewählte Fächer aktualisieren
+        function updateSubjectCounter() {
+            const counter = document.getElementById('selection-counter');
+            counter.textContent = `Ausgewählte Fächer: ${selectedSubjects.length}/${MAX_SELECTED_SUBJECTS}`;
+        }
+
+        // Verfügbarkeit der Fächer aktualisieren (Deaktivieren, wenn maximale Anzahl erreicht)
+        function updateSubjectAvailability() {
+            const maxReached = selectedSubjects.length >= MAX_SELECTED_SUBJECTS;
+            
+            document.querySelectorAll('.subject-item').forEach(item => {
+                const subject = item.getAttribute('data-subject');
+                const isSelected = selectedSubjects.includes(subject);
+                
+                if (maxReached && !isSelected) {
+                    item.classList.add('disabled');
+                } else {
+                    item.classList.remove('disabled');
+                }
+            });
+        }
+
+        // Erstellen der Studienfächer-Buttons
+        function renderSubjectsSelection() {
+            const container = document.getElementById('subjects-container');
+            if (!container) return;
+            
+            // Generiere HTML für alle verfügbaren Fächer
+            container.innerHTML = STUDIENFAECHER.map(fach => `
+                <div class="subject-item" data-subject="${fach}" onclick="handleSubjectSelection(event)">
+                    ${fach}
+                </div>
+            `).join('');
+            
+            // Bereits ausgewählte Fächer markieren
+            selectedSubjects.forEach(fach => {
+                const element = container.querySelector(`[data-subject="${fach}"]`);
+                if (element) {
+                    element.classList.add('selected');
+                }
+            });
+            
+            // Verfügbarkeit aktualisieren
+            updateSubjectAvailability();
+            
+            // Zähler aktualisieren
+            updateSubjectCounter();
+        }
+
+        // Radar-Chart zeichnen 
+        function drawRadar() {
+            const canvas = document.getElementById('radarCanvas');
+            const ctx = setupCanvas(canvas);
+
+            // Aktuelle Farbeinstellungen auslesen
+            const subjektivColor = document.getElementById('subjektiv-color').value;
+            const objektivColor = document.getElementById('objektiv-color').value;
+            const interesseColor = document.getElementById('interesse-color').value;
+            
+            // Alpha-Werte für Füllfarben erstellen (20% Deckkraft)
+            const getTransparentColor = (hexColor) => {
+                // Konvertiere hex zu rgb und füge Alpha-Wert hinzu
+                const r = parseInt(hexColor.substring(1,3), 16);
+                const g = parseInt(hexColor.substring(3,5), 16);
+                const b = parseInt(hexColor.substring(5,7), 16);
+                return `rgba(${r}, ${g}, ${b}, 0.2)`;
+            };
+
+            // Berechne das Zentrum und den Radius basierend auf den Canvas-Dimensionen
+            const width = canvas.width;
+            const height = canvas.height;
+            const centerX = width / 2;
+            const centerY = height / 2;
+            const radius = Math.min(width, height) * 0.35; // 35% des Canvas-Radius verwenden
+            
+            // Canvas löschen für Neuzeichnung
+            ctx.clearRect(0, 0, width, height);
+
+            // Berechne Winkel zwischen Achsen basierend auf Anzahl der Bereiche
+            const anzahlBereiche = BEREICHE.length;
+            const winkel = (2 * Math.PI) / anzahlBereiche;
+
+            // Hilfsfunktion zum Zeichnen der verschiedenen Marker
+            function drawMarker(x, y, type, color) {
+                ctx.fillStyle = color;
+                ctx.strokeStyle = color;
+                ctx.lineWidth = 2;
+                
+                switch(type) {
+                    case 'circle': // Kreis für subjektive Werte
+                        ctx.beginPath();
+                        ctx.arc(x, y, 8, 0, 2 * Math.PI);
+                        ctx.fill();
+                        ctx.stroke();
+                        break;
+                    case 'triangle': // Dreieck für objektive Werte
+                        ctx.beginPath();
+                        ctx.moveTo(x, y - 8);
+                        ctx.lineTo(x + 9.2, y + 8);
+                        ctx.lineTo(x - 9.2, y + 8);
+                        ctx.closePath();
+                        ctx.fill();
+                        ctx.stroke();
+                        break;
+                    case 'square': // Quadrat für Interesse-Werte
+                        ctx.beginPath();
+                        ctx.rect(x - 6, y - 6, 12, 12);
+                        ctx.fill();
+                        ctx.stroke();
+                        break;
+                }
+            }
+
+            // Konzentrische Kreise für die Werteskala zeichnen
+            for (let r = 1; r <= 3; r++) {
+                ctx.beginPath();
+                ctx.strokeStyle = '#d1d5db';
+                ctx.lineWidth = 1;
+                
+                // Berechne den aktuellen Radius (von innen nach aussen)
+                const currentRadius = radius * (r / 3);
+                
+                // Zeichne einen Kreis mit dem aktuellen Radius
+                ctx.arc(centerX, centerY, currentRadius, 0, 2 * Math.PI);
+                ctx.stroke();
+            }
+
+            // Achsenlinien vom Zentrum zu den äusseren Punkten
+            ctx.beginPath();
+            ctx.strokeStyle = '#d1d5db';
+            ctx.lineWidth = 1;
+            for (let i = 0; i < anzahlBereiche; i++) {
+                const angle = i * winkel - Math.PI / 2; // Starte bei -90° (oben)
+                const x = centerX + radius * Math.cos(angle);
+                const y = centerY + radius * Math.sin(angle);
+                ctx.moveTo(centerX, centerY);
+                ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+
+            // Beschriftungen der Achsen
+            ctx.font = 'bold 30px Arial';
+            ctx.fillStyle = '#000';
+            
+            BEREICHE.forEach((bereich, i) => {
+                const angle = i * winkel - Math.PI / 2;
+                const labelRadius = radius + 30; // Abstand für die Beschriftungen
+                let x = centerX + labelRadius * Math.cos(angle);
+                let y = centerY + labelRadius * Math.sin(angle);
+                
+                // Text an die Achsenausrichtung anpassen
+                if (Math.cos(angle) < -0.1) {
+                    ctx.textAlign = 'right';
+                } else if (Math.cos(angle) > 0.1) {
+                    ctx.textAlign = 'left';
+                } else {
+                    ctx.textAlign = 'center';
+                }
+                
+                // Vertikale Anpassungen
+                if (Math.sin(angle) > 0.9) {
+                    y += 10; // unten
+                } else if (Math.sin(angle) < -0.9) {
+                    y -= 5; // oben
+                }
+                
+                // Text in zwei Zeilen aufteilen
+                const lines = splitBereichLabel(bereich);
+                
+                // Erste Zeile (kleiner Abstand nach oben)
+                ctx.font = 'bold 30px Arial';
+                ctx.fillText(lines[0], x, y - 15);
+                
+                // Zweite Zeile (kleiner Abstand nach unten)
+                ctx.font = '30px Arial';
+                ctx.fillText(lines[1], x, y + 15);
+            });
+            // Zurücksetzen des textAlign
+            ctx.textAlign = 'left';
+
+            // Daten aggregieren und normalisieren
+            const aggregierteWerte = BEREICHE.reduce((acc, bereich) => {
+                acc[bereich] = {
+                    subjektiv: [],
+                    objektiv: [],
+                    interesse: []
+                };
+                return acc;
+            }, {});
+
+            // Sortiere Antworten nach Bereichen und Ebenen
+            Object.entries(antworten).forEach(([fragenId, wert]) => {
+                const frage = FRAGEN.find(f => f.id === parseInt(fragenId));
+                if (frage) {
+                    aggregierteWerte[frage.bereich][frage.ebene].push(wert);
+                }
+            });
+
+            // Berechne Durchschnittswerte für jede Kategorie
+            const chartData = BEREICHE.map(bereich => ({
+                bereich,
+                subjektiv: durchschnitt(aggregierteWerte[bereich].subjektiv),
+                objektiv: durchschnitt(aggregierteWerte[bereich].objektiv),
+                interesse: durchschnitt(aggregierteWerte[bereich].interesse)
+            }));
+
+            // Definition der Ebenen mit ihren Eigenschaften und den ausgewählten Farben
+            const ebenen = [
+                { name: 'subjektiv', farbe: [getTransparentColor(subjektivColor), subjektivColor], marker: 'circle' },
+                { name: 'objektiv', farbe: [getTransparentColor(objektivColor), objektivColor], marker: 'triangle' },
+                { name: 'interesse', farbe: [getTransparentColor(interesseColor), interesseColor], marker: 'square' }
+            ];
+
+            // Zeichne die Datenpunkte und Verbindungslinien für jede Ebene
+            ebenen.forEach((ebene) => {
+                const punkte = chartData.map((data, i) => {
+                    const normalisierterWert = data[ebene.name] / 3; // Werte auf 0-1 normalisieren
+                    const angle = i * winkel - Math.PI / 2;
+                    return {
+                        x: centerX + ((radius * normalisierterWert)) * Math.cos(angle),
+                        y: centerY + ((radius * normalisierterWert)) * Math.sin(angle)
+                    };
+                });
+
+                // Zeichne die Verbindungslinien und Fläche
+                ctx.beginPath();
+                ctx.fillStyle = ebene.farbe[0]; // Transparente Füllfarbe
+                ctx.strokeStyle = ebene.farbe[1]; // Linienfarbe
+                ctx.lineWidth = 8; // Dickere Linie für bessere Sichtbarkeit
+                ctx.lineCap = 'round'; // Abgerundete Linienenden
+                ctx.lineJoin = 'round'; // Abgerundete Verbindungspunkte
+
+                // Verbinde die Punkte zu einer geschlossenen Form
+                punkte.forEach((punkt, i) => {
+                    if (i === 0) {
+                        ctx.moveTo(punkt.x, punkt.y);
+                    } else {
+                        ctx.lineTo(punkt.x, punkt.y);
+                    }
+                });
+                ctx.lineTo(punkte[0].x, punkte[0].y); // Schliesse die Form
+                ctx.closePath();
+                ctx.fill();
+                ctx.stroke();
+
+                // Zeichne die Marker an den Datenpunkten
+                punkte.forEach(punkt => {
+                    drawMarker(punkt.x, punkt.y, ebene.marker, ebene.farbe[1]);
+                });
+            });
+            
+            // Auch die Farben in der Legende aktualisieren
+            updateLegendColors(subjektivColor, objektivColor, interesseColor);
+        }
+        
+        // Funktion zum Aktualisieren der Farben in der Legende
+        function updateLegendColors(subjektivColor, objektivColor, interesseColor) {
+            // Finde alle SVG-Elemente in der Legende
+            const legendItems = document.querySelectorAll('.legend-item svg');
+            
+            // Aktualisiere die Farben der SVG-Elemente
+            if (legendItems.length >= 3) {
+                // Subjektiv (Kreis)
+                const subjektivSVG = legendItems[0].querySelector('circle');
+                if (subjektivSVG) {
+                    subjektivSVG.setAttribute('fill', subjektivColor);
+                    subjektivSVG.setAttribute('stroke', subjektivColor);
+                }
+                
+                // Objektiv (Dreieck)
+                const objektivSVG = legendItems[1].querySelector('path');
+                if (objektivSVG) {
+                    objektivSVG.setAttribute('fill', objektivColor);
+                    objektivSVG.setAttribute('stroke', objektivColor);
+                }
+                
+                // Interesse (Rechteck)
+                const interesseSVG = legendItems[2].querySelector('rect');
+                if (interesseSVG) {
+                    interesseSVG.setAttribute('fill', interesseColor);
+                    interesseSVG.setAttribute('stroke', interesseColor);
+                }
+            }
+        }
+        
+        // Funktion zum Aktualisieren der Farben und Neuzeichnen des Charts
+        function updateChartColors() {
+            drawRadar(); // Chart mit aktuellen Farben neu zeichnen
+        }
+        
+        // Funktion zum Zurücksetzen der Farben auf die Standardwerte
+        function resetChartColors() {
+            // Standard-Farben setzen
+            document.getElementById('subjektiv-color').value = '#2563eb';
+            document.getElementById('objektiv-color').value = '#16a34a';
+            document.getElementById('interesse-color').value = '#dc2626';
+            
+            // Chart neu zeichnen
+            drawRadar();
+        }
+
+        // Hilfsfunktion: Durchschnitt berechnen
+        function durchschnitt(werte) {
+            if (werte.length === 0) return MIN_WERT;
+            return werte.reduce((a, b) => a + b, 0) / werte.length;
+        }
+        
+        // Hilfsfunktion: Bereichsnamen in zwei Zeilen aufteilen
+        function splitBereichLabel(text) {
+            // Aufteilen bei ": " (z.B. "Lehrperson: Wissen" wird zu ["LP:", "Wissen"])
+            const match = text.match(/^([^:]+):\s*(.+)$/);
+            if (match) {
+                return [match[1] + ":", match[2]];
+            }
+            
+            // Fallback: Teile nach dem ersten Wort
+            const words = text.split(" ");
+            if (words.length > 1) {
+                return [words[0], words.slice(1).join(" ")];
+            }
+            
+            // Wenn keine Aufteilung möglich ist
+            return [text, ""];
+        }
+
+        // Seiten-Navigation: Wechsel zwischen den verschiedenen Fragebogenseiten
+        function goToPage(pageIndex) {
+            // Verstecke aktuelle Seite
+            const activePage = document.querySelector('.page.active');
+            if (activePage) {
+                activePage.classList.remove('active');
+            }
+            
+            // Sammle persönliche Daten, wenn von Seite 1 (persönliche Daten) weiternavigiert wird
+            if (currentPage === 1 && pageIndex > 1) {
+                collectPersonalData();
+            }
+            
+            // Aktuelle Seite aktualisieren
+            currentPage = pageIndex;
+            
+            // Navigation-Abstand anpassen (mehr Platz auf der persönlichen Daten-Seite)
+            const navigationElement = document.querySelector('.navigation');
+            if (navigationElement) {
+                navigationElement.style.marginTop = currentPage === 1 ? '300px' : '20px';
+            }
+            
+            // Zeige entsprechende Seite basierend auf dem Index
+            if (currentPage === 0) {
+                // Für die Startseite
+                document.getElementById('page-start').classList.add('active');
+            }
+            else if (currentPage === 1) {
+                // Für die persönliche Daten-Seite
+                document.getElementById('page-0').classList.add('active');
+                renderSubjectsSelection(); // Sicherstellen, dass die Fächerauswahl aktuell ist
+                
+                // Lerngelegenheiten-Liste initialisieren
+                const container = document.getElementById('lerngelegenheiten-list');
+                if (container) {
+                    // Alle verfügbaren Lerngelegenheiten anzeigen
+                    container.innerHTML = LERNGELEGENHEITEN.map(lg => `
+                        <div class="dropdown-option ${selectedLerngelegenheiten.includes(lg.id) ? 'selected' : ''}" 
+                             data-id="${lg.id}" 
+                             onclick="handleLerngelegenheitSelection('${lg.id}')">
+                            <div class="dropdown-option-content">
+                                <div class="dropdown-option-title">${lg.titel}</div>
+                                <div class="dropdown-option-info">
+                                    <span class="option-category">${lg.kategorie}</span>
+                                    <span class="option-semester">${lg.semester}</span>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+                    
+                    // Suchfunktion für Lerngelegenheiten einrichten
+                    const searchInput = document.getElementById('lerngelegenheiten-search');
+                    if (searchInput) {
+                        searchInput.addEventListener('input', function() {
+                            const searchTerm = this.value.toLowerCase();
+                            const options = document.querySelectorAll('#lerngelegenheiten-list .dropdown-option');
+                            let hasResults = false;
+                            
+                            // Filtere die Optionen basierend auf dem Suchbegriff
+                            options.forEach(option => {
+                                const text = option.textContent.toLowerCase();
+                                if (text.includes(searchTerm)) {
+                                    option.style.display = 'block';
+                                    hasResults = true;
+                                } else {
+                                    option.style.display = 'none';
+                                }
+                            });
+                            
+                            // "Keine Ergebnisse" Hinweis anzeigen, wenn nötig
+                            const noResultsElement = document.getElementById('no-results');
+                            if (!hasResults) {
+                                if (!noResultsElement) {
+                                    const noResults = document.createElement('div');
+                                    noResults.id = 'no-results';
+                                    noResults.className = 'no-results';
+                                    noResults.textContent = 'Keine Ergebnisse gefunden';
+                                    document.getElementById('lerngelegenheiten-list').appendChild(noResults);
+                                }
+                            } else if (noResultsElement) {
+                                noResultsElement.remove();
+                            }
+                        });
+                    }
+                    
+                    // Bereits ausgewählte Optionen anzeigen
+                    updateSelectedLerngelegenheitenDisplay();
+                }
+            } 
+            else if (currentPage === pages.length + 1) {
+                // Für die Ergebnisseite
+                renderPersonalData();
+                renderResultsSummary();
+                document.getElementById('page-final').classList.add('active');
+                
+                // Verzögerung zum Zeichnen des Radar-Diagramms
+                // Gibt dem Browser Zeit, die Seite zu rendern, bevor das Diagramm gezeichnet wird
+                setTimeout(() => {
+                    try {
+                        drawRadar();
+                    } catch (e) {
+                        console.error("Fehler beim Zeichnen des Radar-Charts:", e);
+                    }
+                }, 100);
+            } 
+            else {
+                // Für die Frageseiten
+                renderFragen();
+                document.getElementById(pages[currentPage - 2]).classList.add('active');
+            }
+            
+            // Navigation-Buttons aktualisieren
+            document.getElementById('prevButton').disabled = currentPage === 0;
+            document.getElementById('nextButton').textContent = currentPage === pages.length + 1 ? 'Abschliessen' : 'Weiter';
+            
+            // Fortschrittsanzeige aktualisieren
+            updateProgressIndicator();
+        }
+
+        // Event-Listener für Navigation-Buttons
+        document.getElementById('prevButton').addEventListener('click', () => {
+            if (currentPage > 0) {
+                goToPage(currentPage - 1);
+            }
+        });
+
+        document.getElementById('nextButton').addEventListener('click', () => {
+            if (currentPage < pages.length + 1) {
+                goToPage(currentPage + 1);
+            } else {
+                // Formular abschliessen und Druck-Dialog öffnen
+                window.print();
+            }
+        });
+
+        // Responsive Canvas-Anpassung bei Fenstergrössen-Änderung
+        window.addEventListener('resize', () => {
+            if (currentPage === pages.length + 1) {
+                drawRadar(); // Radar-Chart neu zeichnen bei Grössenänderung
+            }
+        });
+
+        // Initialisierung der Anwendung
+        function init() {
+            initPages();
+            
+            // Erste Seite laden (Startseite)
+            goToPage(0);
+        }
+
+        // Starte die Anwendung nach dem vollständigen Laden des DOM
+        document.addEventListener('DOMContentLoaded', function() {
+            init();
+            
+            // Globale Funktionen für Event-Handler bereitstellen
+            window.handleAntwort = handleAntwort;
+            window.handleSubjectSelection = handleSubjectSelection;
+            window.handleLerngelegenheitSelection = handleLerngelegenheitSelection;
+            window.updateSelectedLerngelegenheitenDisplay = updateSelectedLerngelegenheitenDisplay;
+            window.removeLerngelegenheit = removeLerngelegenheit;
+        });
+    </script>
+</body>
+</html>
