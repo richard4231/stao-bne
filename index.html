@@ -1517,9 +1517,6 @@
                 return acc;
             }, {});
             
-            // Final-Seite als letzte Seite hinzufügen
-            pages.push('page-final');
-
             // Erstelle für jeden Bereich eine eigene Fragensei
             let pageIndex = 1; // Start bei 1, weil 0 bereits persönliche Daten sind
             BEREICHE.forEach(bereich => {
@@ -1546,6 +1543,9 @@
                 
                 pageIndex++;
             });
+            
+            // Final-Seite als letzte Seite hinzufügen
+            pages.push('page-final');
             
             // Fortschrittsanzeige erstellen
             updateProgressIndicator();
